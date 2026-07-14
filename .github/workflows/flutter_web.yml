@@ -3,7 +3,7 @@ name: Deploy Flutter Web to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'bf_elec_apps/**'
       - '.github/workflows/flutter_web.yml'
