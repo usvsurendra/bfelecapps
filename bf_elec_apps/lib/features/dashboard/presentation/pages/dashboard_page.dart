@@ -2,6 +2,7 @@ import 'package:bf_elec_apps/core/theme/app_theme.dart';
 import 'package:bf_elec_apps/features/drawings/presentation/pages/drawings_list_page.dart';
 import 'package:bf_elec_apps/features/motor_details/presentation/pages/motor_search_page.dart';
 import 'package:bf_elec_apps/features/shift_snags/presentation/pages/shift_snags_page.dart';
+import 'package:bf_elec_apps/features/smp/presentation/pages/smp_list_page.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -97,6 +98,30 @@ class DashboardPage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (_) => const ShiftSnagsPage()),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _AppCard(
+                          title: 'SMP',
+                          subtitle: 'Standard Maintenance Procedure',
+                          icon: Icons.menu_book_rounded,
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF065F46), Color(0xFF059669)],
+                          ),
+                          iconBg: const Color(0xFFD1FAE5),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const SmpListPage()),
                             );
                           },
                         ),

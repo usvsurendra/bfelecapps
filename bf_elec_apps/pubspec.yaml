@@ -67,6 +67,7 @@ flutter:
     - assets/motor_data.csv
     - assets/drawings_data.csv
     - assets/shift_snags_data.csv
+    - assets/smp_data.csv
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
