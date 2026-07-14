@@ -1,0 +1,109 @@
+PLC,PLCDATA,HARDWIRE,HARDWIREDATA
+SIEMENS STEP 7 FORCE REMOVE FORCE,"<h1><strong><span style=""text-decoration: underline;"">HOW TO FORCE ANY VARIABLE:</span></strong></h1>
+<p><strong><span style=""text-decoration: underline;"">›</span> CLICK ON <span style=""color: #ff0000;"">STEP7</span></strong></p>
+<p><strong><span style=""text-decoration: underline;"">› </span>CLICK ON TAB <span style=""color: #ff0000;"">PLC</span></strong></p>
+<p><strong>› CLICK ON <span style=""color: #ff0000;"">DISPLAY FORCE VALUES</span></strong></p>
+<p><strong>›ENTER THE ADDRESS SAY <span style=""color: #ff0000;"">I1.0</span> AND ENTER</strong></p>
+<p><strong>›ENTER 1 OR 0 IN<span style=""color: #ff0000;""> FORCE VALUE</span> TAB</strong></p>
+<p><strong>›CLICK ON <span style=""color: #ff0000;"">FORCE</span></strong></p>
+<p><strong>›IF ASKS CONFIRMATION CLICK ON <span style=""color: #ff0000;"">YES</span></strong></p>
+<h1><strong><span style=""text-decoration: underline;"">HOW TO REMOVE FORCE:</span></strong></h1>
+<p><span style=""color: #ff0000;""><strong><span style=""text-decoration: underline;"">***NEVER CLICK ON DELETE FORCE IT WILL REMOVE ALL FORCES***</span></strong></span></p>
+<p><span style=""color: #ff0000;""><strong><span style=""color: #000000;""><span style=""text-decoration: underline;"">›</span> CLICK ON</span> STEP7</strong></span></p>
+<p><strong>› CLICK ON TAB <span style=""color: #ff0000;"">PLC</span></strong></p>
+<p><strong>› CLICK ON <span style=""color: #ff0000;"">DISPLAY FORCE VALUES</span></strong></p>
+<p><strong>›<span style=""color: #ff0000;"">CLICK ON VARIABLE</span> WHICH YOU WANT TO REMOVE FORCE</strong></p>
+<p><strong>›REMOVE FORCE IN <span style=""color: #ff0000;"">FORCE VALUE</span> TAB</strong></p>
+<p><strong>›CLICK ON <span style=""color: #ff0000;"">FORCE</span></strong></p>
+<p><strong><span style=""color: #ff0000;""><span style=""color: #000000;"">›IF ASKS CONFIRMATION CLICK ON </span>YES</span></strong></p>
+<p> </p>",ok,ok
+BF1 TH1 HAMMER BYPASS,"<h1>TH1 HAMMER PRESSED ON BYPASS </h1>
+<p><strong> OPEN <span style=""color: #ff0000;"">FC265</span></strong></p>
+<p> <strong>OPEN <span style=""color: #ff0000;"">NETWORKS</span></strong></p>
+<p> <strong>OPEN <span style=""color: #ff0000;"">NETWORK 96</span></strong></p>
+<p> <strong>OPEN <span style=""color: #ff0000;"">LOGIC_0</span></strong></p>
+<p> <strong>Change to <span style=""color: #ff0000;"">LOGIC_1</span></strong></p>
+<p> <strong>Press <span style=""color: #ff0000;"">ENTER</span></strong></p>
+<p><strong>Click on <span style=""color: #ff0000;"">DOWNLOAD</span></strong></p>
+<p> </p>
+<p> </p>",OK,OK
+BF1 TH2 HAMMER BYPASS,"<h1><span style=""color: #0000ff;"">TH2 HAMMER PRESSED ON BYPASS</span></h1>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">FC275</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">NETWORKS</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">NETWORK 97</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">LOGIC_0</span></p>
+<p>Change to&nbsp;<span style=""color: #ff0000;"">LOGIC_1</span></p>
+<p>Press&nbsp;<span style=""color: #ff0000;"">ENTER</span></p>
+<p>Click on&nbsp;<span style=""color: #ff0000;"">DOWNLOAD</span></p>",,
+BF1 TH3 HAMMER BYPASS,"<h1><span style=""color: #0000ff;"">TH3 HAMMER PRESSED ON BYPASS</span></h1>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">FC280</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">NETWORKS</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">NETWORK 96</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">LOGIC_0</span></p>
+<p>Change to&nbsp;<span style=""color: #ff0000;"">LOGIC_1</span></p>
+<p>Press&nbsp;<span style=""color: #ff0000;"">ENTER</span></p>
+<p>Click on&nbsp;<span style=""color: #ff0000;"">DOWNLOAD</span></p>",,
+BF1 TH4 HAMMER BYPASS,"<h1><span style=""color: #0000ff;"">TH4 HAMMER PRESSED ON BYPASS</span></h1>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">FC267</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">NETWORKS</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">NETWORK 97</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">LOGIC_0</span></p>
+<p>Change to&nbsp;<span style=""color: #ff0000;"">LOGIC_1</span></p>
+<p>Press&nbsp;<span style=""color: #ff0000;"">ENTER</span></p>
+<p>Click on&nbsp;<span style=""color: #ff0000;"">DOWNLOAD</span></p>",,
+BF1 AB PLC TAG FOR TREND DISPLAY,"<h1><span style=""color: #0000ff;"">BF1 TAG CREATION FOR TREND DISPLAY</span></h1>
+<h4>1. Open <span style=""color: #ff0000;"">FACTORY TALK VIEW STUDIO</span></h4>
+<h4><span style=""color: #ff0000;"">2.DATA LOG</span></h4>
+<h4>3.open required <span style=""color: #ff0000;"">Data Log model</span></h4>
+<h4>4.<span style=""color: #ff0000;"">Tags</span> in Model</h4>
+<h4>5.Browse either <span style=""color: #ff0000;"">tag</span> or <span style=""color: #ff0000;"">PLC</span> <span style=""color: #ff0000;"">input</span> bit</h4>
+<h4>6. Click on <span style=""color: #ff0000;"">ADD</span> and <span style=""color: #ff0000;"">OK</span></h4>
+<h4>7. Open the <span style=""color: #ff0000;"">trend page</span> and <span style=""color: #ff0000;"">add the pen</span> to display.</h4>",,
+BF1 BHS1 AB PLC LOGIC MODIFICATION,"<h1>BF1 BHS1 AB PLC LOGIC CHANGES</h1><ol><li><h4>Double click on <span style=""color: #ff0000;""> left side of Rung </span></h4></li><li><h4>Edit the required <span style=""color: #ff0000;""> changes </span></h4></li><li><h4>Click on <span style=""color: #ff0000;""> Test Edits </span></h4></li><li><h4>Click on <span style=""color: #ff0000;""> Assemble Edits </span></h4></li><li><h4>If asks confirmation Click on <span style=""color: #ff0000;""> YES </span></h4></li><li><h4><span style=""color: #ff0000;""> Save </span> project.</h4></li><li><h4>If ask to update variable Click on <span style=""color: #ff0000;""> YES </span></h4></li></ol>",,
+BHS2 DE GE PLC change over,"<h1>BHS2 GE PLC DOWNLOAD LOGIC PLCA to PLCB</h1>
+<ul>
+<li>OPEN <span style=""color: #ff0000;"">PROJECT</span></li>
+<li>RIGHT CLICK ON <span style=""color: #ff0000;"">PRIMARY CONFIGUARATION</span> (LEFT SIDE)</li>
+<li>CHECK THE IP ADDRESS&nbsp; IF IT IS&nbsp; &nbsp;<span style=""color: #ff0000;"">XX.XX.XX.51</span> it is primary</li>
+<li>CHANGE IT TO <span style=""color: #ff0000;"">XX.XX.XX.52</span> which is secondary</li>
+<li>Click on <span style=""color: #ff0000;"">VALIDATE</span></li>
+<li>CLICK on <span style=""color: #ff0000;"">DOWNLOAD</span></li>
+<li>A Pop up saying as <span style=""color: #ff0000;"">one in primary other in secondary</span>. Ignore IT</li>
+<li></li>
+</ul>",,
+GE PLC LOGIC BACKUP AND RESTORE BACKUP,"<h1>GE PLC LOGIC BACKUP AND RESTORE</h1>
+<h2><span style=""color: #0000ff;"">Backup:</span></h2>
+<ol>
+<li>
+<h4>Right click on <span style=""color: #ff0000;"">VSP_BF2_cfde</span>&nbsp; &nbsp;</h4>
+</li>
+<li>
+<h4>Click on <span style=""color: #ff0000;"">save &amp; Backup</span></h4>
+</li>
+</ol>
+<h2><span style=""color: #0000ff;"">Restore:</span></h2>
+<ol>
+<li>
+<h4>Click on <span style=""color: #ff0000;"">VSP</span></h4>
+</li>
+<li>
+<h4>Right Click on it</h4>
+</li>
+<li>
+<h4>Click on <span style=""color: #ff0000;"">restore</span></h4>
+</li>
+<li>
+<h4>Select file</h4>
+</li>
+<li>
+<h4>Click on <span style=""color: #ff0000;"">Overwrite</span>.</h4>
+</li>
+</ol>",,
+BF2 stove 618 interlock with 613,"<h1><span style=""color: #0000ff;"">TH4 HAMMER PRESSED ON BYPASS</span></h1>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">FC267</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">NETWORKS</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">NETWORK 97</span></p>
+<p>OPEN&nbsp;<span style=""color: #ff0000;"">LOGIC_0</span></p>
+<p>Change to&nbsp;<span style=""color: #ff0000;"">LOGIC_1</span></p>
+<p>Press&nbsp;<span style=""color: #ff0000;"">ENTER</span></p>
+<p>Click on&nbsp;<span style=""color: #ff0000;"">DOWNLOAD</span></p>",,
