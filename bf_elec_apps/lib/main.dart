@@ -1,5 +1,5 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
-import 'package:bf_elec_apps/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:bf_elec_apps/features/auth/presentation/pages/splash_page.dart';
 import 'package:bf_elec_apps/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Skip Firebase on web until real API keys are configured in firebase_options.dart
   if (!kIsWeb) {
     try {
       await Firebase.initializeApp(
@@ -29,7 +28,7 @@ class BfElecApps extends StatelessWidget {
       title: 'Blast Furnace Apps',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const DashboardPage(),
+      home: const SplashPage(),
     );
   }
 }

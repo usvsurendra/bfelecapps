@@ -2,7 +2,7 @@ import 'package:bf_elec_apps/core/theme/app_theme.dart';
 import 'package:bf_elec_apps/features/auth/presentation/pages/auth_layout.dart';
 import 'package:bf_elec_apps/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:bf_elec_apps/features/auth/presentation/pages/signup_page.dart';
-import 'package:bf_elec_apps/features/drawings/presentation/pages/drawings_list_page.dart';
+import 'package:bf_elec_apps/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -11,10 +11,10 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthLayout(
-      title: 'BF ELEC. DRAWINGS',
-      subtitle: 'Please login to access drawings',
+      title: 'BFELECAPPS',
+      subtitle: 'Sign in to access all modules',
       headerColor: AppTheme.primaryBlue,
-      headerIcon: Icons.computer_rounded,
+      headerIcon: Icons.lock_open_rounded,
       formContent: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -61,7 +61,7 @@ class LoginPage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const DrawingsListPage()),
+                  MaterialPageRoute(builder: (_) => const DashboardPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -89,7 +89,7 @@ class LoginPage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const DrawingsListPage()),
+                  MaterialPageRoute(builder: (_) => const DashboardPage()),
                 );
               },
               style: OutlinedButton.styleFrom(

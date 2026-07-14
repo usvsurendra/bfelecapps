@@ -1,5 +1,5 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
-import 'package:bf_elec_apps/features/auth/presentation/pages/login_page.dart';
+import 'package:bf_elec_apps/features/drawings/presentation/pages/drawings_list_page.dart';
 import 'package:bf_elec_apps/features/motor_details/presentation/pages/motor_search_page.dart';
 import 'package:bf_elec_apps/features/shift_snags/presentation/pages/shift_snags_page.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +52,7 @@ class DashboardPage extends StatelessWidget {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (_) => const LoginPage()),
+                              MaterialPageRoute(builder: (_) => const DrawingsListPage()),
                             );
                           },
                         ),
