@@ -1,45 +1,37 @@
+import 'package:bf_elec_apps/core/offline/offline_manager.dart';
 import 'package:bf_elec_apps/features/drawings/domain/models/drawing.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Repository that loads drawing data from Google Sheets CSV,
-/// with fallback to a bundled local asset and SharedPreferences cache.
 class DrawingRepository {
   static const String _csvUrl =
       'https://docs.google.com/spreadsheets/d/1CLtMZxYV8YE3G28B_gU9Knor3036xeNYvddjRYfMVx8/export?format=csv&gid=2079200137';
   static const String _cacheKey = 'drawings_csv_cache';
 
-  /// Load drawings, trying online → cache → bundled asset in order.
   Future<List<Drawing>> loadDrawings() async {
     String csvData = '';
 
-    // 1. Try fetching from Google Sheets
-    try {
-      final response = await http
-          .get(Uri.parse(_csvUrl))
-          .timeout(const Duration(seconds: 10));
-      if (response.statusCode == 200) {
-        csvData = response.body;
-        // Cache for offline use
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(_cacheKey, csvData);
-      }
-    } catch (_) {
-      // Network/CORS failure — fall through to cache/asset
+    if (!(await OfflineManager.isDrawingsCsvDownloaded())) {
+      try {
+        final response = await http
+            .get(Uri.parse(_csvUrl))
+            .timeout(const Duration(seconds: 10));
+        if (response.statusCode == 200) {
+          csvData = response.body;
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString(_cacheKey, csvData);
+        }
+      } catch (_) {}
     }
 
-    // 2. Try loading from cache
     if (csvData.isEmpty) {
       try {
         final prefs = await SharedPreferences.getInstance();
         csvData = prefs.getString(_cacheKey) ?? '';
-      } catch (_) {
-        // SharedPreferences failure — fall through to asset
-      }
+      } catch (_) {}
     }
 
-    // 3. Fallback to bundled asset
     if (csvData.isEmpty) {
       try {
         csvData = await rootBundle.loadString('assets/drawings_data.csv');
@@ -51,7 +43,6 @@ class DrawingRepository {
     return _parseCsv(csvData);
   }
 
-  /// Parse raw CSV text into a list of Drawing objects.
   List<Drawing> _parseCsv(String csvData) {
     final lines = csvData
         .split('\n')
@@ -61,7 +52,6 @@ class DrawingRepository {
 
     if (lines.isEmpty) return [];
 
-    // Skip header row
     final dataLines = lines.skip(1);
     final List<Drawing> drawings = [];
 
@@ -71,9 +61,7 @@ class DrawingRepository {
         if (drawing.title.isNotEmpty) {
           drawings.add(drawing);
         }
-      } catch (_) {
-        // Skip malformed rows
-      }
+      } catch (_) {}
     }
 
     return drawings;

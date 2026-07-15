@@ -22,7 +22,6 @@ class Drawing {
   }
 
   /// Determines the area/category prefix from the title.
-  /// E.g., "BF1 Tilting VFD" → "BF1", "BHS 3 CK3A DRIVE 1" → "BHS3"
   String get area {
     final upper = title.toUpperCase();
     if (upper.startsWith('BF1')) return 'BF1';
@@ -43,7 +42,12 @@ class Drawing {
     return 'OTHER';
   }
 
-  /// Robust CSV field parser that handles quoted fields containing commas.
+  /// Safe file name for offline PDF storage.
+  String get fileName {
+    final safe = title.replaceAll(RegExp(r'[^A-Za-z0-9_-]'), '_');
+    return '${area}_$safe';
+  }
+
   static List<String> _parseCsvRow(String row) {
     final List<String> fields = [];
     bool inQuotes = false;

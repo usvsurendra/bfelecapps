@@ -1,3 +1,4 @@
+import 'package:bf_elec_apps/core/offline/offline_manager.dart';
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -6,11 +7,13 @@ import 'package:webview_flutter/webview_flutter.dart';
 class DrawingPdfPage extends StatefulWidget {
   final String title;
   final String pdfUrl;
+  final String drawingId;
 
   const DrawingPdfPage({
     super.key,
     required this.title,
-    this.pdfUrl = '',
+    required this.pdfUrl,
+    this.drawingId = '',
   });
 
   @override
@@ -18,7 +21,11 @@ class DrawingPdfPage extends StatefulWidget {
 }
 
 class _DrawingPdfPageState extends State<DrawingPdfPage> {
+  bool _isLoading = true;
+  bool _hasError = false;
+  String? _errorMessage;
   late final WebViewController _controller;
+  String? _localPdfPath;
 
   @override
   void initState() {
@@ -31,19 +38,61 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
           onPageFinished: (_) {},
           onWebResourceError: (error) {
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to load PDF: ${error.description}')),
-              );
+              setState(() {
+                _hasError = true;
+                _errorMessage = error.description;
+                _isLoading = false;
+              });
             }
           },
         ),
       );
+    _loadPdf();
+  }
+
+  Future<void> _loadPdf() async {
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+      _errorMessage = null;
+    });
+
+    try {
+      if (widget.drawingId.isNotEmpty) {
+        final localFile = await OfflineManager.getPdfFile(widget.drawingId);
+        if (localFile != null && await localFile.exists()) {
+          _localPdfPath = localFile.path;
+          await _controller.loadRequest(Uri.file(localFile.path));
+          if (mounted) setState(() => _isLoading = false);
+          return;
+        }
+      }
+
+      if (widget.pdfUrl.isNotEmpty) {
+        await _controller.loadRequest(Uri.parse(widget.pdfUrl));
+        if (mounted) setState(() => _isLoading = false);
+      } else {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+            _hasError = true;
+            _errorMessage = 'No PDF available';
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+          _errorMessage = e.toString();
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final pdfUrl = widget.pdfUrl.isEmpty ? 'about:blank' : widget.pdfUrl;
-
     return Scaffold(
       backgroundColor: AppTheme.softWhite,
       appBar: AppBar(
@@ -52,6 +101,11 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
         foregroundColor: AppTheme.primaryBlue,
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            tooltip: 'Reload',
+            onPressed: _loadPdf,
+          ),
           if (widget.pdfUrl.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.open_in_browser_rounded),
@@ -65,9 +119,19 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
             ),
         ],
       ),
-      body: widget.pdfUrl.isEmpty
+      body: widget.pdfUrl.isEmpty && (widget.drawingId.isEmpty || _localPdfPath == null)
           ? _buildEmptyState()
-          : WebViewWidget(controller: _controller..loadRequest(Uri.parse(pdfUrl))),
+          : _hasError
+              ? _buildErrorState()
+              : Stack(
+                  children: [
+                    WebViewWidget(controller: _controller),
+                    if (_isLoading)
+                      const Center(
+                        child: CircularProgressIndicator(color: AppTheme.primaryBlue, strokeWidth: 3),
+                      ),
+                  ],
+                ),
     );
   }
 
@@ -108,6 +172,75 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
               'No PDF link available for this drawing.',
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 15, color: AppTheme.slateText),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEE2E2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(Icons.wifi_off_rounded, size: 40, color: AppTheme.dangerRed),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Unable to load drawing',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.deepNavy,
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _errorMessage ?? 'The PDF may be unavailable or the network connection is weak.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 14, color: AppTheme.slateText),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _loadPdf,
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: const Text('Retry'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryBlue,
+                      foregroundColor: AppTheme.pureWhite,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      final uri = Uri.parse(widget.pdfUrl);
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      }
+                    },
+                    icon: const Icon(Icons.open_in_browser_rounded),
+                    label: const Text('Browser'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.successGreen,
+                      foregroundColor: AppTheme.pureWhite,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

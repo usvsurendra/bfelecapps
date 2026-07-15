@@ -1,4 +1,6 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
+import 'package:bf_elec_apps/core/offline/offline_manager.dart';
+import 'package:bf_elec_apps/core/offline/offline_download_button.dart';
 import 'package:bf_elec_apps/features/drawings/data/repositories/drawing_repository.dart';
 import 'package:bf_elec_apps/features/drawings/domain/models/drawing.dart';
 import 'package:bf_elec_apps/features/drawings/presentation/pages/drawing_pdf_page.dart';
@@ -18,6 +20,7 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
   List<Drawing> _allDrawings = [];
   bool _isLoading = true;
   String? _errorMessage;
+  bool _isDrawingsOffline = false;
 
   final DrawingRepository _repository = DrawingRepository();
   final TextEditingController _searchController = TextEditingController();
@@ -35,12 +38,21 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
   void initState() {
     super.initState();
     _loadDrawings();
+    _checkOfflineStatus();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _checkOfflineStatus() async {
+    final isOffline = await OfflineManager.isDrawingsCsvDownloaded();
+    if (mounted) {
+      setState(() => _isDrawingsOffline = isOffline);
+    }
+    return;
   }
 
   Future<void> _loadDrawings() async {
@@ -90,6 +102,7 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
       body: Column(
         children: [
           _buildTopBar(),
+          _buildOfflineBar(),
           if (_isAreaWise) _buildAreaTabs() else _buildSearchBar(),
           Expanded(
             child: _isLoading
@@ -162,10 +175,10 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -185,7 +198,7 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
                     value: _isAreaWise,
                     onChanged: (val) {
                       setState(() {
-                        _isAreaWise = val;
+                        _isAreaWise = val ?? false;
                       });
                     },
                     activeThumbColor: AppTheme.pureWhite,
@@ -195,6 +208,33 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
                   ),
                 ],
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOfflineBar() {
+    final pdfUrls = _allDrawings
+        .where((d) => d.drawingLink.isNotEmpty)
+        .map((d) => d.drawingLink)
+        .toList();
+    return Container(
+      color: AppTheme.pureWhite,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+            child: OfflineDownloadButton(
+              title: 'Drawings PDFs',
+              fileName: 'drawings_data_offline.csv',
+              downloadUrls: pdfUrls,
+              onProgress: (downloaded, total) async {},
+              onComplete: () async {
+                await _checkOfflineStatus();
+              },
+              alreadyDownloadedText: _isDrawingsOffline ? 'Update Offline PDFs' : 'Download Drawings for Offline',
             ),
           ),
         ],
@@ -212,7 +252,7 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
           border: Border.all(color: AppTheme.borderGray),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.deepNavy.withOpacity(0.04),
+              color: AppTheme.deepNavy.withValues(alpha: 0.04),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -403,6 +443,7 @@ class _DrawingTile extends StatelessWidget {
                 builder: (_) => DrawingPdfPage(
                   title: drawing.title,
                   pdfUrl: drawing.drawingLink,
+                  drawingId: drawing.fileName,
                 ),
               ),
             );
