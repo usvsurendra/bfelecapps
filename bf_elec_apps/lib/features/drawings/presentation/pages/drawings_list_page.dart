@@ -12,7 +12,7 @@ class DrawingsListPage extends StatefulWidget {
   State<DrawingsListPage> createState() => _DrawingsListPageState();
 }
 
-class _DrawingsListPageState extends State<DrawingsListPage> {
+class _DrawingsListPageState extends State<DrawingsListPage> with SingleTickerProviderStateMixin {
   bool _isAreaWise = false;
   String _searchQuery = '';
   String _selectedArea = 'BF1';
@@ -22,6 +22,8 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
 
   final DrawingRepository _repository = DrawingRepository();
   final TextEditingController _searchController = TextEditingController();
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
 
   static const List<String> _areaTabs = [
     'BF1',
@@ -35,11 +37,20 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.3, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+    _animationController.repeat(reverse: true);
     _loadDrawings();
   }
 
   @override
   void dispose() {
+    _animationController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -51,15 +62,19 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
     });
     try {
       final drawings = await _repository.loadDrawings();
-      setState(() {
-        _allDrawings = drawings;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _allDrawings = drawings;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Failed to load drawings: $e';
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Failed to load drawings: $e';
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -110,46 +125,116 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
           if (_isAreaWise) _buildAreaTabs() else _buildSearchBar(),
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue, strokeWidth: 3))
+                ? _buildLoadingState()
                 : _errorMessage != null
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 80,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFFEE2E2),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: const Icon(Icons.error_outline_rounded, size: 40, color: AppTheme.dangerRed),
-                              ),
-                              const SizedBox(height: 20),
-                              Text(_errorMessage!,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(color: AppTheme.darkText)),
-                              const SizedBox(height: 20),
-                              ElevatedButton.icon(
-                                onPressed: _loadDrawings,
-                                icon: const Icon(Icons.refresh_rounded),
-                                label: const Text('Retry'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppTheme.primaryBlue,
-                                  foregroundColor: AppTheme.pureWhite,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
+                    ? _buildErrorState()
                     : _isAreaWise
                         ? _buildAreaWiseList()
                         : _buildSingleList(),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Center(
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                gradient: AppTheme.primaryGradient,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.primaryBlue.withValues(alpha: 0.3),
+                    blurRadius: 24,
+                    offset: const Offset(0, 12),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.architecture_rounded,
+                size: 40,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Loading Drawings...',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: AppTheme.deepNavy,
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: 120,
+              child: LinearProgressIndicator(
+                minHeight: 4,
+                borderRadius: BorderRadius.circular(2),
+                valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryBlue.withValues(alpha: 0.6)),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Fetching latest data from cloud',
+              style: TextStyle(
+                fontSize: 12,
+                color: AppTheme.slateText,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEE2E2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(Icons.error_outline_rounded, size: 40, color: AppTheme.dangerRed),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Unable to load drawings',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppTheme.deepNavy),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _errorMessage ?? 'Please check your connection and try again.',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 14, color: AppTheme.slateText),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: _loadDrawings,
+              icon: const Icon(Icons.refresh_rounded),
+              label: const Text('Retry'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryBlue,
+                foregroundColor: AppTheme.pureWhite,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -202,7 +287,7 @@ class _DrawingsListPageState extends State<DrawingsListPage> {
                     value: _isAreaWise,
                     onChanged: (val) {
                       setState(() {
-                        _isAreaWise = val;
+                        _isAreaWise = val ?? false;
                       });
                     },
                     activeThumbColor: AppTheme.pureWhite,

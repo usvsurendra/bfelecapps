@@ -125,8 +125,11 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
                   children: [
                     WebViewWidget(controller: _controller),
                     if (_isLoading)
-                      const Center(
-                        child: CircularProgressIndicator(color: AppTheme.primaryBlue, strokeWidth: 3),
+                      Container(
+                        color: AppTheme.softWhite,
+                        child: const Center(
+                          child: CircularProgressIndicator(color: AppTheme.primaryBlue, strokeWidth: 3),
+                        ),
                       ),
                   ],
                 ),
