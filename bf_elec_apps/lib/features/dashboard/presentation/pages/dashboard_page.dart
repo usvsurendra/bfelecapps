@@ -1,5 +1,6 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
 import 'package:bf_elec_apps/features/drawings/presentation/pages/drawings_list_page.dart';
+import 'package:bf_elec_apps/features/material_requisition/presentation/pages/material_requisition_page.dart';
 import 'package:bf_elec_apps/features/motor_details/presentation/pages/motor_search_page.dart';
 import 'package:bf_elec_apps/features/shift_snags/presentation/pages/shift_snags_page.dart';
 import 'package:bf_elec_apps/features/smp/presentation/pages/smp_list_page.dart';
@@ -122,6 +123,33 @@ class DashboardPage extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (_) => const SmpListPage()),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _AppCard(
+                          title: 'Material Requisition',
+                          subtitle: 'Plant Item Request Form',
+                          icon: Icons.post_add_rounded,
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
+                          ),
+                          iconBg: const Color(0xFFE0E7FF),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    const MaterialRequisitionPage(),
+                              ),
                             );
                           },
                         ),
