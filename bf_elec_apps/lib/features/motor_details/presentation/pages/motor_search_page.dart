@@ -1,5 +1,4 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
-import 'package:bf_elec_apps/core/offline/offline_manager.dart';
 import 'package:bf_elec_apps/core/offline/offline_download_button.dart';
 import 'package:bf_elec_apps/features/motor_details/data/repositories/motor_repository.dart';
 import 'package:bf_elec_apps/features/motor_details/domain/models/motor.dart';
@@ -14,7 +13,6 @@ class MotorSearchPage extends StatefulWidget {
 }
 
 class _MotorSearchPageState extends State<MotorSearchPage> {
-  bool _isMotorOffline = false;
   final MotorRepository _repository = MotorRepository();
   
   List<Motor> _allMotors = [];
@@ -30,21 +28,12 @@ class _MotorSearchPageState extends State<MotorSearchPage> {
     super.initState();
     _loadData();
     _searchController.addListener(_runSearch);
-    _checkOfflineStatus();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  Future<void> _checkOfflineStatus() async {
-    final isOffline = await OfflineManager.isMotorCsvDownloaded();
-    if (mounted) {
-      setState(() => _isMotorOffline = isOffline);
-    }
-    return;
   }
 
   Future<void> _loadData({bool forceRefresh = false}) async {
@@ -145,7 +134,17 @@ class _MotorSearchPageState extends State<MotorSearchPage> {
               : Column(
                   children: [
                     _buildStatusBar(),
-                    _buildOfflineBar(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      child: OfflineDownloadButton(
+                        title: 'Motor Nameplate Details',
+                        fileName: 'motor_data_offline.csv',
+                        downloadUrls: [MotorRepository.csvUrl],
+                        onComplete: () async {
+                          _loadData(forceRefresh: true);
+                        },
+                      ),
+                    ),
                     _buildSearchBar(),
                     Expanded(
                       child: _filteredMotors.isEmpty
@@ -191,30 +190,6 @@ class _MotorSearchPageState extends State<MotorSearchPage> {
           Text(
             'Synced: $_lastUpdated',
             style: TextStyle(fontSize: 11, color: AppTheme.slateText),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOfflineBar() {
-    return Container(
-      color: AppTheme.pureWhite,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Row(
-        children: [
-          Expanded(
-            child: OfflineDownloadButton(
-              title: 'Motor Nameplate Details',
-              fileName: 'motor_data_offline.csv',
-              downloadUrls: [MotorRepository.csvUrl],
-              onProgress: (downloaded, total) async {},
-              onComplete: () async {
-                await _checkOfflineStatus();
-                _loadData(forceRefresh: true);
-              },
-              alreadyDownloadedText: _isMotorOffline ? 'Update Offline Data' : 'Make Offline Available',
-            ),
           ),
         ],
       ),

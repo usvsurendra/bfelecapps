@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 class OfflineManager {
   static const String _motorCsvName = 'motor_data_offline.csv';
   static const String _drawingsCsvName = 'drawings_data_offline.csv';
-  static const String _smpCsvName = 'smp_data_offline.csv';
   static const String _drawingsPdfDir = 'drawings_pdfs';
 
   static Future<Directory> get _appDir async {
@@ -14,11 +13,13 @@ class OfflineManager {
     return dir;
   }
 
-  static Future<Directory> get _pdfDir async {
+  static Future<Directory> getPdfDir() async {
     final dir = Directory((await _appDir).path + '/$_drawingsPdfDir');
     await dir.create(recursive: true);
     return dir;
   }
+
+  static Future<Directory> get _pdfDir async => getPdfDir();
 
   static Future<File> _getFile(String fileName) async {
     final dir = await _appDir;
@@ -35,14 +36,8 @@ class OfflineManager {
     return await file.exists();
   }
 
-  static Future<bool> isSmpCsvDownloaded() async {
-    final file = await _getFile(_smpCsvName);
-    return await file.exists();
-  }
-
   static Future<File> getMotorCsvFile() async => await _getFile(_motorCsvName);
   static Future<File> getDrawingsCsvFile() async => await _getFile(_drawingsCsvName);
-  static Future<File> getSmpCsvFile() async => await _getFile(_smpCsvName);
 
   static Future<String?> getMotorCsvPath() async {
     final file = await _getFile(_motorCsvName);
@@ -52,12 +47,6 @@ class OfflineManager {
 
   static Future<String?> getDrawingsCsvPath() async {
     final file = await _getFile(_drawingsCsvName);
-    if (await file.exists()) return file.path;
-    return null;
-  }
-
-  static Future<String?> getSmpCsvPath() async {
-    final file = await _getFile(_smpCsvName);
     if (await file.exists()) return file.path;
     return null;
   }
@@ -95,12 +84,7 @@ class OfflineManager {
 
   static Future<int> getAvailableStorageBytes() async {
     if (Platform.isAndroid || Platform.isIOS) {
-      final dir = await _appDir;
-      final stat = await dir.stat();
-      // Use stat to estimate; on mobile we can't easily get exact free space without platform channels.
-      // For simplicity, return a large number or use a plugin.
-      // We'll assume enough storage and rely on download failures if full.
-      return 500 * 1024 * 1024; // conservative fallback: 500MB
+      return 500 * 1024 * 1024;
     }
     return 1024 * 1024 * 1024;
   }
@@ -123,13 +107,14 @@ class OfflineManager {
     return 0;
   }
 
-  static Future<int> estimateTotalDownloadSize(List<String> urls) async {
-    int total = 0;
-    for (final url in urls) {
-      final size = await getFileSize(url);
-      total += size;
-    }
-    return total;
+  static Future<void> saveMotorCsv(String csvData) async {
+    final file = await _getFile(_motorCsvName);
+    await file.writeAsString(csvData);
+  }
+
+  static Future<void> saveDrawingsCsv(String csvData) async {
+    final file = await _getFile(_drawingsCsvName);
+    await file.writeAsString(csvData);
   }
 
   static Future<void> clearAllOfflineData() async {
@@ -150,4 +135,3 @@ class OfflineManager {
     } catch (_) {}
   }
 }
-

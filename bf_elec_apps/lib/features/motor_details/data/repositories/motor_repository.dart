@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:bf_elec_apps/core/offline/offline_manager.dart';
 import 'package:bf_elec_apps/features/motor_details/domain/models/motor.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,24 +16,6 @@ class MotorRepository {
     final prefs = await SharedPreferences.getInstance();
 
     if (!forceRefresh) {
-      final offlinePath = await OfflineManager.getMotorCsvPath();
-      if (offlinePath != null) {
-        try {
-          final file = File(offlinePath);
-          if (await file.exists()) {
-            final csvData = await file.readAsString();
-            if (csvData.isNotEmpty && csvData.contains('EQPTNAME')) {
-              await prefs.setString(_lastUpdatedKey, 'Offline Download');
-              return _parseCsv(csvData);
-            }
-          }
-        } catch (_) {}
-      }
-    }
-
-    String? cachedCsv = prefs.getString(_cachedCsvKey);
-
-    if (forceRefresh || cachedCsv == null) {
       try {
         final response = await http.get(Uri.parse(csvUrl)).timeout(
               const Duration(seconds: 10),
@@ -43,25 +26,34 @@ class MotorRepository {
             await prefs.setString(_cachedCsvKey, csvData);
             await prefs.setString(
                 _lastUpdatedKey, DateTime.now().toIso8601String());
-            cachedCsv = csvData;
+            await OfflineManager.saveMotorCsv(csvData);
+            return _parseCsv(csvData);
           }
         }
       } catch (e) {
-        if (cachedCsv == null) {
-          try {
-            cachedCsv = await rootBundle.loadString('assets/motor_data.csv');
-            await prefs.setString(_cachedCsvKey, cachedCsv);
-            await prefs.setString(
-                _lastUpdatedKey, 'Bundled (Offline)');
-          } catch (assetError) {
-            rethrow;
-          }
-        }
+        debugPrint('Online load failed: $e');
       }
     }
 
-    if (cachedCsv == null) {
-      throw Exception('No motor data available. Please connect to the internet.');
+    String? cachedCsv = prefs.getString(_cachedCsvKey);
+    if (cachedCsv == null || cachedCsv.isEmpty) {
+      try {
+        final offlinePath = await OfflineManager.getMotorCsvPath();
+        if (offlinePath != null) {
+          final file = File(offlinePath);
+          if (await file.exists()) {
+            cachedCsv = await file.readAsString();
+          }
+        }
+      } catch (_) {}
+    }
+
+    if (cachedCsv == null || cachedCsv.isEmpty) {
+      try {
+        cachedCsv = await rootBundle.loadString('assets/motor_data.csv');
+      } catch (e) {
+        throw Exception('No motor data available. Please connect to the internet.');
+      }
     }
 
     return _parseCsv(cachedCsv);
@@ -193,4 +185,3 @@ class MotorRepository {
     }).toList();
   }
 }
-

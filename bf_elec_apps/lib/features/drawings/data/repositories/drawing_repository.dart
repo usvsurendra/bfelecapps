@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:bf_elec_apps/core/offline/offline_manager.dart';
 import 'package:bf_elec_apps/features/drawings/domain/models/drawing.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -12,23 +13,34 @@ class DrawingRepository {
   Future<List<Drawing>> loadDrawings() async {
     String csvData = '';
 
-    if (!(await OfflineManager.isDrawingsCsvDownloaded())) {
-      try {
-        final response = await http
-            .get(Uri.parse(_csvUrl))
-            .timeout(const Duration(seconds: 10));
-        if (response.statusCode == 200) {
-          csvData = response.body;
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString(_cacheKey, csvData);
-        }
-      } catch (_) {}
-    }
+    try {
+      final response = await http
+          .get(Uri.parse(_csvUrl))
+          .timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        csvData = response.body;
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_cacheKey, csvData);
+        await OfflineManager.saveDrawingsCsv(csvData);
+      }
+    } catch (_) {}
 
     if (csvData.isEmpty) {
       try {
         final prefs = await SharedPreferences.getInstance();
         csvData = prefs.getString(_cacheKey) ?? '';
+      } catch (_) {}
+    }
+
+    if (csvData.isEmpty) {
+      try {
+        final offlinePath = await OfflineManager.getDrawingsCsvPath();
+        if (offlinePath != null) {
+          final file = File(offlinePath);
+          if (await file.exists()) {
+            csvData = await file.readAsString();
+          }
+        }
       } catch (_) {}
     }
 

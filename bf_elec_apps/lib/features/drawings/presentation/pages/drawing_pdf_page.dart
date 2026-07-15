@@ -25,7 +25,6 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
   bool _hasError = false;
   String? _errorMessage;
   late final WebViewController _controller;
-  String? _localPdfPath;
 
   @override
   void initState() {
@@ -61,7 +60,6 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
       if (widget.drawingId.isNotEmpty) {
         final localFile = await OfflineManager.getPdfFile(widget.drawingId);
         if (localFile != null && await localFile.exists()) {
-          _localPdfPath = localFile.path;
           await _controller.loadRequest(Uri.file(localFile.path));
           if (mounted) setState(() => _isLoading = false);
           return;
@@ -119,7 +117,7 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
             ),
         ],
       ),
-      body: widget.pdfUrl.isEmpty && (widget.drawingId.isEmpty || _localPdfPath == null)
+      body: widget.pdfUrl.isEmpty && (widget.drawingId.isEmpty || _hasError)
           ? _buildEmptyState()
           : _hasError
               ? _buildErrorState()
