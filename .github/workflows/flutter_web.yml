@@ -41,6 +41,11 @@ jobs:
       - name: Build web
         run: flutter build web --release --base-href /bfelecapps/
 
+      - name: Use local CanvasKit (avoid gstatic CDN hang/blank screen)
+        run: |
+          sed -i "s/_flutter.loader.load({/_flutter.loader.load({\n  canvasKitBaseUrl: 'canvaskit\/',/" build/web/flutter_bootstrap.js
+          grep -q "canvasKitBaseUrl" build/web/flutter_bootstrap.js && echo "patched: local CanvasKit enabled" || echo "patch FAILED"
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
