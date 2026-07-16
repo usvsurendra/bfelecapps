@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:bf_elec_apps/core/offline/offline_manager.dart';
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -33,8 +35,14 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onPageStarted: (_) {},
-          onPageFinished: (_) {},
+          onPageStarted: (_) {
+            if (mounted) setState(() => _isLoading = true);
+          },
+          onPageFinished: (_) {
+            // On web the page finishes as soon as the wrapper HTML loads;
+            // the inner <iframe> then streams the PDF. Hide the overlay here.
+            if (mounted) setState(() => _isLoading = false);
+          },
           onWebResourceError: (error) {
             if (mounted) {
               setState(() {
@@ -67,7 +75,31 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
       }
 
       if (widget.pdfUrl.isNotEmpty) {
-        await _controller.loadRequest(Uri.parse(widget.pdfUrl));
+        final uri = Uri.parse(widget.pdfUrl);
+        if (kIsWeb) {
+          // webview_flutter_web renders an <iframe>; a raw binary PDF does not
+          // display inside it. Wrap the PDF in an HTML page with an <iframe>
+          // whose src points at the PDF — browsers render PDFs natively there.
+          final html = '''
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                  html, body { margin: 0; padding: 0; height: 100%; background: #fff; }
+                  iframe { display: block; width: 100%; height: 100%; border: 0; }
+                </style>
+              </head>
+              <body>
+                <iframe src="${htmlEscape.convert(uri.toString())}" allow="fullscreen"></iframe>
+              </body>
+            </html>
+          ''';
+          await _controller.loadHtmlString(html);
+        } else {
+          await _controller.loadRequest(uri);
+        }
         if (mounted) setState(() => _isLoading = false);
       } else {
         if (mounted) {
@@ -123,7 +155,9 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
               ? _buildErrorState()
               : Stack(
                   children: [
-                    WebViewWidget(controller: _controller),
+                    Positioned.fill(
+                      child: WebViewWidget(controller: _controller),
+                    ),
                     if (_isLoading)
                       Container(
                         color: AppTheme.softWhite,
