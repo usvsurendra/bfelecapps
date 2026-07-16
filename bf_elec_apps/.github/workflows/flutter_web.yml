@@ -1,0 +1,58 @@
+name: Deploy Flutter Web to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bf_elec_apps/**'
+      - '.github/workflows/flutter_web.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bf_elec_apps
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.6'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build web
+        run: flutter build web --release --base-href /bfelecapps/
+
+      - name: Use local CanvasKit (avoid gstatic CDN hang/blank screen)
+        run: |
+          sed -i "s/_flutter.loader.load({/_flutter.loader.load({\n  canvasKitBaseUrl: 'canvaskit\/',/" build/web/flutter_bootstrap.js
+          grep -q "canvasKitBaseUrl" build/web/flutter_bootstrap.js && echo "patched: local CanvasKit enabled" || echo "patch FAILED"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: bf_elec_apps/build/web
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
