@@ -41,10 +41,29 @@ jobs:
       - name: Build web
         run: flutter build web --release --base-href /bfelecapps/
 
-      - name: Use local CanvasKit (avoid gstatic CDN hang/blank screen)
+      - name: Use local CanvasKit + disable service worker (avoid gstatic CDN hang and stale-cache blank screen)
         run: |
+          # 1) Load CanvasKit from local app files instead of gstatic CDN.
           sed -i "s/_flutter.loader.load({/_flutter.loader.load({ config: { canvasKitBaseUrl: 'canvaskit\/' },\n/" build/web/flutter_bootstrap.js
           grep -q "canvasKitBaseUrl" build/web/flutter_bootstrap.js && echo "patched: local CanvasKit enabled" || echo "patch FAILED"
+          # 2) Disable the Flutter service worker so a previously cached (broken)
+          #    build is never served to returning visitors.
+          sed -i "s/serviceWorkerSettings: {[^}]*}/serviceWorkerSettings: undefined/" build/web/flutter_bootstrap.js
+          # 3) Replace flutter_service_worker.js with a no-op that unregisters
+          #    any already-installed service worker and clears its cache.
+          cat > build/web/flutter_service_worker.js <<'SWEOF'
+          // No-op service worker: unregister self and clear caches so the app
+          // always loads fresh assets (prevents stale cached blank screens).
+          self.addEventListener('install', function () { self.skipWaiting(); });
+          self.addEventListener('activate', function (event) {
+            event.waitUntil(
+              caches.keys().then(function (keys) {
+                return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+              }).then(function () { return self.registration.unregister(); })
+            );
+          });
+          SWEOF
+          echo "service worker neutralized"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
