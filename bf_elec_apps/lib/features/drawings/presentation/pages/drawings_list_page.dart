@@ -3,6 +3,7 @@ import 'package:bf_elec_apps/core/offline/pdf_offline_download_button.dart';
 import 'package:bf_elec_apps/features/drawings/data/repositories/drawing_repository.dart';
 import 'package:bf_elec_apps/features/drawings/domain/models/drawing.dart';
 import 'package:bf_elec_apps/features/drawings/presentation/pages/drawing_pdf_page.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 class DrawingsListPage extends StatefulWidget {
@@ -106,7 +107,7 @@ class _DrawingsListPageState extends State<DrawingsListPage> with SingleTickerPr
       body: Column(
         children: [
           _buildTopBar(),
-          if (_allDrawings.isNotEmpty)
+          if (!kIsWeb && _allDrawings.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: PdfOfflineDownloadButton(
