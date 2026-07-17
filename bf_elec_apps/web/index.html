@@ -44,6 +44,14 @@
 
   <script src="flutter_bootstrap.js" async></script>
   <script>
+    window.addEventListener('flutter-first-frame', function() {
+      var root = document.getElementById('root');
+      if (root) {
+        root.remove();
+      }
+    });
+  </script>
+  <script>
     window.addEventListener('error', function(e) {
       if (!document.getElementById('error-reported')) {
         console.error('Application error:', e.error);
