@@ -48,7 +48,7 @@ jobs:
           grep -q "canvasKitBaseUrl" build/web/flutter_bootstrap.js && echo "patched: local CanvasKit enabled" || echo "patch FAILED"
           # 2) Disable the Flutter service worker so a previously cached (broken)
           #    build is never served to returning visitors.
-          sed -i "s/serviceWorkerSettings: {[^}]*}/serviceWorkerSettings: undefined/" build/web/flutter_bootstrap.js
+          perl -0pi -e "s/serviceWorkerSettings: \\{[^}]*\\}/serviceWorkerSettings: undefined/" build/web/flutter_bootstrap.js
           # 3) Replace flutter_service_worker.js with a no-op that unregisters
           #    any already-installed service worker and clears its cache.
           cat > build/web/flutter_service_worker.js <<'SWEOF'
