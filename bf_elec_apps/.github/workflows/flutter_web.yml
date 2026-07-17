@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   web-deploy:
@@ -23,33 +33,20 @@ jobs:
         run: flutter pub get
 
       - name: Build web app
-        run: |
-          flutter pub run flutter_bootstrap.py \
-            --target=lib/main.dart \
-            --worker=worker.js \
-            --output=build/web \
-            --deferred-loading \
-            --flavor=prod \
-            --dart-define-from-file=flutter_bootstrap.json \
-            --dart-define=TITLE=BFELECAPPS \
-            --dart-define=BASE_HREF=/bfelecapps/ \
-            --dart-define=kIsWeb=true \
-            --dart-define=FLUTTER_WEB_USE_SKIA=true \
-          flutter build web --dart-define=kIsWeb=true --dart-define=FLUTTER_WEB_USE_SKIA=true
+        run: flutter build web --release --base-href /bfelecapps/
 
-      - name: Configure Flutter CanvasKit and Disable Service Worker
+      - name: Disable service worker
         shell: bash
         run: |
-          mkdir -p build/web/canvaskit
-          cp -r packages/flutter_tools/lib/src/flutter_bootstrap/directory/kits /tmp/flutter_canvas_kit 2>/dev/null || true
-          find packages/flutter_tools -name "flutter_service_worker.js" -exec cp {} build/web/ \; 2>/dev/null || true
-          echo '// Service worker placeholder to unregister self' > build/web/flutter_service_worker.js
-          echo 'self.addEventListener("install", (e) => self.skipWaiting());' >> build/web/flutter_service_worker.js
+          if [ -f build/web/flutter_service_worker.js ]; then
+            echo '// Service worker placeholder to unregister self' > build/web/flutter_service_worker.js
+            echo 'self.addEventListener("install", (e) => self.skipWaiting());' >> build/web/flutter_service_worker.js
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/web
-          keep_files: true
-          allow_empty_commit: true
+        uses: actions/deploy-pages@v4

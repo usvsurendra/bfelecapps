@@ -1,5 +1,6 @@
 import 'package:bf_elec_apps/features/auth/presentation/pages/login_page.dart';
 import 'package:bf_elec_apps/features/auth/presentation/pages/forgot_password_page.dart';
+import 'package:bf_elec_apps/features/auth/presentation/pages/profile_settings_page.dart';
 import 'package:bf_elec_apps/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:bf_elec_apps/features/drawings/presentation/pages/drawings_list_page.dart';
 import 'package:bf_elec_apps/features/material_requisition/presentation/pages/material_requisition_page.dart';
@@ -15,6 +16,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
       GoRoute(path: '/forgot-password', builder: (context, state) => const ForgotPasswordPage()),
+      GoRoute(path: '/profile', builder: (context, state) => const ProfileSettingsPage()),
       GoRoute(
         path: '/dashboard',
         builder: (context, state) => const DashboardPage(),

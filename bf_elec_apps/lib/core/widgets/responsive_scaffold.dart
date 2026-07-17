@@ -30,6 +30,7 @@ class _ResponsiveScaffoldState extends ConsumerState<ResponsiveScaffold> {
     if (route.contains('shift')) return 2;
     if (route.contains('smp')) return 3;
     if (route.contains('material')) return 4;
+    if (route.contains('profile')) return 5;
     return -1;
   }
 
@@ -40,6 +41,7 @@ class _ResponsiveScaffoldState extends ConsumerState<ResponsiveScaffold> {
       '/dashboard/shift-snags',
       '/dashboard/smp',
       '/dashboard/material-requisition',
+      '/profile',
     ];
     if (index < routes.length) context.go(routes[index]);
   }
@@ -111,6 +113,7 @@ class _ResponsiveScaffoldState extends ConsumerState<ResponsiveScaffold> {
                   BottomNavigationBarItem(icon: Icon(Icons.warning_amber_rounded), label: 'Snags'),
                   BottomNavigationBarItem(icon: Icon(Icons.menu_book_rounded), label: 'SMP'),
                   BottomNavigationBarItem(icon: Icon(Icons.post_add_rounded), label: 'Requisition'),
+                  BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'Profile'),
                 ],
                 backgroundColor: AppTheme.sidebarBg,
                 selectedItemColor: const Color(0xFFA5B4FC),
@@ -235,6 +238,13 @@ class _ResponsiveScaffoldState extends ConsumerState<ResponsiveScaffold> {
                   label: 'Material Requisition',
                   index: 4,
                   route: '/dashboard/material-requisition',
+                ),
+                _buildSectionLabel('ACCOUNT'),
+                _buildNavItem(
+                  icon: Icons.person_rounded,
+                  label: 'Profile Settings',
+                  index: 5,
+                  route: '/profile',
                 ),
               ],
             ),

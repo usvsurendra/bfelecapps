@@ -1,11 +1,39 @@
+import 'dart:convert';
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
 import 'package:bf_elec_apps/features/auth/presentation/pages/auth_layout.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  static const String _photoKey = 'profile_photo_base64';
+  static const String _nameKey = 'profile_name';
+
+  String? _photoBase64;
+  String? _savedName;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedProfile();
+  }
+
+  Future<void> _loadSavedProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _photoBase64 = prefs.getString(_photoKey);
+        _savedName = prefs.getString(_nameKey);
+      });
+    }
+  }
 
   Future<void> _login(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
@@ -13,16 +41,50 @@ class LoginPage extends StatelessWidget {
     if (context.mounted) context.go('/dashboard/drawings');
   }
 
+  Widget _buildProfileAvatar() {
+    if (_photoBase64 == null) {
+      return CircleAvatar(
+        radius: 28,
+        backgroundColor: AppTheme.primaryBlue,
+        child: Text(
+          (_savedName ?? 'U').substring(0, 1).toUpperCase(),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
+        ),
+      );
+    }
+
+    try {
+      final bytes = base64Decode(_photoBase64!);
+      return CircleAvatar(
+        radius: 28,
+        backgroundImage: MemoryImage(bytes),
+      );
+    } catch (_) {
+      return CircleAvatar(
+        radius: 28,
+        backgroundColor: AppTheme.primaryBlue,
+        child: Text(
+          (_savedName ?? 'U').substring(0, 1).toUpperCase(),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AuthLayout(
       title: 'BFELECAPPS',
-      subtitle: 'Sign in to access all modules',
+      subtitle: _savedName != null ? 'Welcome back, $_savedName' : 'Sign in to access all modules',
       headerColor: AppTheme.primaryBlue,
       headerIcon: Icons.lock_open_rounded,
       formContent: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Center(
+            child: _buildProfileAvatar(),
+          ),
+          const SizedBox(height: 20),
           TextField(
             decoration: InputDecoration(
               prefixIcon: Icon(Icons.alternate_email_rounded, color: AppTheme.primaryBlue),
