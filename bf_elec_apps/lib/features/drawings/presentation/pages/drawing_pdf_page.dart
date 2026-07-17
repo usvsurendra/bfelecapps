@@ -78,8 +78,8 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
         final uri = Uri.parse(widget.pdfUrl);
         if (kIsWeb) {
           // webview_flutter_web renders an <iframe>; a raw binary PDF does not
-          // display inside it. Wrap the PDF in an HTML page with an <iframe>
-          // whose src points at the PDF — browsers render PDFs natively there.
+          // display inside it on some browsers. Wrap the PDF in a Google Docs viewer.
+          final googleDocsUrl = 'https://docs.google.com/gview?embedded=true&url=${Uri.encodeComponent(uri.toString())}';
           final html = '''
             <!DOCTYPE html>
             <html>
@@ -92,7 +92,7 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
                 </style>
               </head>
               <body>
-                <iframe src="${htmlEscape.convert(uri.toString())}" allow="fullscreen"></iframe>
+                <iframe src="$googleDocsUrl" allow="fullscreen"></iframe>
               </body>
             </html>
           ''';
