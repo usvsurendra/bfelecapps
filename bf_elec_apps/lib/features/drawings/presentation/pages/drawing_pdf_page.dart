@@ -31,29 +31,30 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
   @override
   void initState() {
     super.initState();
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageStarted: (_) {
-            if (mounted) setState(() => _isLoading = true);
-          },
-          onPageFinished: (_) {
-            // On web the page finishes as soon as the wrapper HTML loads;
-            // the inner <iframe> then streams the PDF. Hide the overlay here.
-            if (mounted) setState(() => _isLoading = false);
-          },
-          onWebResourceError: (error) {
-            if (mounted) {
-              setState(() {
-                _hasError = true;
-                _errorMessage = error.description;
-                _isLoading = false;
-              });
-            }
-          },
-        ),
-      );
+    _controller = WebViewController();
+    if (!kIsWeb) {
+      _controller
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onPageStarted: (_) {
+              if (mounted) setState(() => _isLoading = true);
+            },
+            onPageFinished: (_) {
+              if (mounted) setState(() => _isLoading = false);
+            },
+            onWebResourceError: (error) {
+              if (mounted) {
+                setState(() {
+                  _hasError = true;
+                  _errorMessage = error.description;
+                  _isLoading = false;
+                });
+              }
+            },
+          ),
+        );
+    }
     _loadPdf();
   }
 
