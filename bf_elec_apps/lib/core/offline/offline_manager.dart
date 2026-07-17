@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -6,6 +7,8 @@ class OfflineManager {
   static const String _motorCsvName = 'motor_data_offline.csv';
   static const String _drawingsCsvName = 'drawings_data_offline.csv';
   static const String _drawingsPdfDir = 'drawings_pdfs';
+
+  static bool get isOfflineSupported => !kIsWeb && Platform.isAndroid;
 
   static Future<Directory> get _appDir async {
     final dir = await getApplicationDocumentsDirectory();

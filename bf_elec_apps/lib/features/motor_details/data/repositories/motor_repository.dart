@@ -26,7 +26,9 @@ class MotorRepository {
             await prefs.setString(_cachedCsvKey, csvData);
             await prefs.setString(
                 _lastUpdatedKey, DateTime.now().toIso8601String());
-            await OfflineManager.saveMotorCsv(csvData);
+            if (OfflineManager.isOfflineSupported) {
+              await OfflineManager.saveMotorCsv(csvData);
+            }
             return _parseCsv(csvData);
           }
         }
@@ -38,11 +40,13 @@ class MotorRepository {
     String? cachedCsv = prefs.getString(_cachedCsvKey);
     if (cachedCsv == null || cachedCsv.isEmpty) {
       try {
-        final offlinePath = await OfflineManager.getMotorCsvPath();
-        if (offlinePath != null) {
-          final file = File(offlinePath);
-          if (await file.exists()) {
-            cachedCsv = await file.readAsString();
+        if (OfflineManager.isOfflineSupported) {
+          final offlinePath = await OfflineManager.getMotorCsvPath();
+          if (offlinePath != null) {
+            final file = File(offlinePath);
+            if (await file.exists()) {
+              cachedCsv = await file.readAsString();
+            }
           }
         }
       } catch (_) {}

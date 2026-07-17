@@ -1,12 +1,17 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
 import 'package:bf_elec_apps/features/auth/presentation/pages/auth_layout.dart';
-import 'package:bf_elec_apps/features/auth/presentation/pages/forgot_password_page.dart';
-import 'package:bf_elec_apps/features/auth/presentation/pages/signup_page.dart';
-import 'package:bf_elec_apps/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
+
+  Future<void> _login(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_logged_in', true);
+    if (context.mounted) context.go('/dashboard/drawings');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +44,7 @@ class LoginPage extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ForgotPasswordPage()),
-                );
+                context.push('/forgot-password');
               },
               child: Text(
                 'Forgot Password?',
@@ -58,12 +60,7 @@ class LoginPage extends StatelessWidget {
             width: double.infinity,
             height: 52,
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const DashboardPage()),
-                );
-              },
+              onPressed: () => _login(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryBlue,
                 foregroundColor: AppTheme.pureWhite,
@@ -86,12 +83,7 @@ class LoginPage extends StatelessWidget {
             width: double.infinity,
             height: 52,
             child: OutlinedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const DashboardPage()),
-                );
-              },
+              onPressed: () => _login(context),
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: AppTheme.primaryBlue, width: 1.5),
                 shape: RoundedRectangleBorder(
@@ -127,10 +119,7 @@ class LoginPage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SignupPage()),
-                  );
+                  context.pushReplacement('/register');
                 },
                 child: Text(
                   'create account',

@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
+import 'package:bf_elec_apps/core/widgets/responsive_scaffold.dart';
 import 'package:bf_elec_apps/core/offline/pdf_offline_download_button.dart';
 import 'package:bf_elec_apps/features/drawings/data/repositories/drawing_repository.dart';
 import 'package:bf_elec_apps/features/drawings/domain/models/drawing.dart';
@@ -96,18 +98,13 @@ class _DrawingsListPageState extends State<DrawingsListPage> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.softWhite,
-      appBar: AppBar(
-        title: Text(_isAreaWise ? 'AREA WISE LIST' : 'SINGLE LIST'),
-        backgroundColor: AppTheme.pureWhite,
-        foregroundColor: AppTheme.primaryBlue,
-        elevation: 0,
-      ),
+    return ResponsiveScaffold(
+      currentRoute: '/dashboard/drawings',
+      title: 'Drawings',
       body: Column(
         children: [
           _buildTopBar(),
-          if (!kIsWeb && _allDrawings.isNotEmpty)
+          if (!kIsWeb && Platform.isAndroid && _allDrawings.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: PdfOfflineDownloadButton(

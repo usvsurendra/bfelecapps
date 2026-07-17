@@ -1,4 +1,5 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
+import 'package:bf_elec_apps/core/widgets/responsive_scaffold.dart';
 import 'package:bf_elec_apps/features/smp/data/repositories/smp_repository.dart';
 import 'package:bf_elec_apps/features/smp/domain/models/smp.dart';
 import 'package:flutter/material.dart';
@@ -69,21 +70,9 @@ class _SmpListPageState extends State<SmpListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.softWhite,
-      appBar: AppBar(
-        title: const Text('STANDARD MAINTENANCE PROCEDURE'),
-        backgroundColor: AppTheme.pureWhite,
-        foregroundColor: AppTheme.primaryBlue,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.sync_rounded),
-            tooltip: 'Sync documents',
-            onPressed: () => _loadItems(forceRefresh: true),
-          ),
-        ],
-      ),
+    return ResponsiveScaffold(
+      currentRoute: '/dashboard/smp',
+      title: 'SMP',
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(

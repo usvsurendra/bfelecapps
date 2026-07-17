@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
+import 'package:bf_elec_apps/core/widgets/responsive_scaffold.dart';
 import 'package:bf_elec_apps/core/offline/offline_download_button.dart';
 import 'package:bf_elec_apps/features/motor_details/data/repositories/motor_repository.dart';
 import 'package:bf_elec_apps/features/motor_details/domain/models/motor.dart';
 import 'package:bf_elec_apps/features/motor_details/presentation/pages/name_plate_page.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 class MotorSearchPage extends StatefulWidget {
@@ -77,26 +80,9 @@ class _MotorSearchPageState extends State<MotorSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.softWhite,
-      appBar: AppBar(
-        title: const Text(
-          'BLAST FURNACE\nNAME PLATE DETAILS',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, letterSpacing: 0.5),
-        ),
-        backgroundColor: AppTheme.pureWhite,
-        foregroundColor: AppTheme.primaryBlue,
-        centerTitle: true,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.sync_rounded),
-            tooltip: 'Sync Spreadsheet Data',
-            onPressed: () => _loadData(forceRefresh: true),
-          ),
-        ],
-      ),
+    return ResponsiveScaffold(
+      currentRoute: '/dashboard/motor-details',
+      title: 'Motor Details',
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryBlue, strokeWidth: 3))
           : _errorMessage.isNotEmpty
@@ -134,17 +120,18 @@ class _MotorSearchPageState extends State<MotorSearchPage> {
               : Column(
                   children: [
                     _buildStatusBar(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      child: OfflineDownloadButton(
-                        title: 'Motor Nameplate Details',
-                        fileName: 'motor_data_offline.csv',
-                        downloadUrls: [MotorRepository.csvUrl],
-                        onComplete: () async {
-                          _loadData(forceRefresh: true);
-                        },
+                    if (!kIsWeb && Platform.isAndroid)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: OfflineDownloadButton(
+                          title: 'Motor Nameplate Details',
+                          fileName: 'motor_data_offline.csv',
+                          downloadUrls: [MotorRepository.csvUrl],
+                          onComplete: () async {
+                            _loadData(forceRefresh: true);
+                          },
+                        ),
                       ),
-                    ),
                     _buildSearchBar(),
                     Expanded(
                       child: _filteredMotors.isEmpty

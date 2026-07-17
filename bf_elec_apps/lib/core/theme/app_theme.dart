@@ -19,6 +19,15 @@ class AppTheme {
   static const Color mediumGray = Color(0xFF64748B);
   static const Color darkText = Color(0xFF0F172A);
   static const Color slateText = Color(0xFF475569);
+  static const Color slate = Color(0xFF64748B);
+
+  // ─── Sidebar / Shell ──────────────────────────────────────────────────────
+  static const Color contentBg = Color(0xFFF8FAFC);
+  static const Color sidebarBg = Color(0xFF0B1D3A);
+  static const Color sidebarActiveBg = Color(0xFF1E3A5C);
+  static const Color sidebarInactive = Color(0xFF94A3B8);
+  static const Color sidebarLabel = Color(0xFF64748B);
+  static const Color indigoAccent = Color(0xFF6366F1);
 
   // ─── Semantic ────────────────────────────────────────────────────────────
   static const Color successGreen = Color(0xFF10B981);

@@ -1,4 +1,5 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
+import 'package:bf_elec_apps/core/widgets/responsive_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,14 +18,9 @@ class MaterialRequisitionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.softWhite,
-      appBar: AppBar(
-        title: const Text('Material Requisition Form'),
-        backgroundColor: AppTheme.pureWhite,
-        foregroundColor: AppTheme.primaryBlue,
-        elevation: 0,
-      ),
+    return ResponsiveScaffold(
+      currentRoute: '/dashboard/material-requisition',
+      title: 'Material Requisition',
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(

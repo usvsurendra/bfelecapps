@@ -65,7 +65,7 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
     });
 
     try {
-      if (widget.drawingId.isNotEmpty) {
+      if (widget.drawingId.isNotEmpty && OfflineManager.isOfflineSupported) {
         final localFile = await OfflineManager.getPdfFile(widget.drawingId);
         if (localFile != null && await localFile.exists()) {
           await _controller.loadRequest(Uri.file(localFile.path));

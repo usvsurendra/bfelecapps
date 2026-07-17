@@ -21,7 +21,9 @@ class DrawingRepository {
         csvData = response.body;
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString(_cacheKey, csvData);
-        await OfflineManager.saveDrawingsCsv(csvData);
+        if (OfflineManager.isOfflineSupported) {
+          await OfflineManager.saveDrawingsCsv(csvData);
+        }
       }
     } catch (_) {}
 
@@ -34,11 +36,13 @@ class DrawingRepository {
 
     if (csvData.isEmpty) {
       try {
-        final offlinePath = await OfflineManager.getDrawingsCsvPath();
-        if (offlinePath != null) {
-          final file = File(offlinePath);
-          if (await file.exists()) {
-            csvData = await file.readAsString();
+        if (OfflineManager.isOfflineSupported) {
+          final offlinePath = await OfflineManager.getDrawingsCsvPath();
+          if (offlinePath != null) {
+            final file = File(offlinePath);
+            if (await file.exists()) {
+              csvData = await file.readAsString();
+            }
           }
         }
       } catch (_) {}

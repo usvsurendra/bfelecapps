@@ -1,9 +1,6 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
-import 'package:bf_elec_apps/features/drawings/presentation/pages/drawings_list_page.dart';
-import 'package:bf_elec_apps/features/material_requisition/presentation/pages/material_requisition_page.dart';
-import 'package:bf_elec_apps/features/motor_details/presentation/pages/motor_search_page.dart';
-import 'package:bf_elec_apps/features/shift_snags/presentation/pages/shift_snags_page.dart';
-import 'package:bf_elec_apps/features/smp/presentation/pages/smp_list_page.dart';
+import 'package:bf_elec_apps/core/widgets/responsive_scaffold.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -11,228 +8,123 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          _buildHeader(context),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  Text(
-                    'Welcome to the BF Apps Portal',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.deepNavy,
-                        ),
+    return ResponsiveScaffold(
+      currentRoute: '/dashboard/drawings',
+      title: 'Dashboard',
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 8),
+            Text(
+              'Welcome to the BF Apps Portal',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.deepNavy,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Select an application to continue',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppTheme.slateText,
-                        ),
-                  ),
-                  const SizedBox(height: 32),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _AppCard(
-                          title: 'Drawings App',
-                          subtitle: 'BF Electrical Drawings',
-                          icon: Icons.architecture_rounded,
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFF0077B6), Color(0xFF00B4D8)],
-                          ),
-                          iconBg: const Color(0xFFE0F2FE),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const DrawingsListPage()),
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: _AppCard(
-                          title: 'Motor Details',
-                          subtitle: 'Name Plate Database',
-                          icon: Icons.electric_meter_rounded,
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFF0F4C81), Color(0xFF1E40AF)],
-                          ),
-                          iconBg: const Color(0xFFDBEAFE),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const MotorSearchPage()),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _AppCard(
-                          title: 'Shift Snags',
-                          subtitle: 'PLC & Hardwire Solutions',
-                          icon: Icons.warning_amber_rounded,
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFF92400E), Color(0xFFD97706)],
-                          ),
-                          iconBg: const Color(0xFFFEF3C7),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const ShiftSnagsPage()),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _AppCard(
-                          title: 'SMP',
-                          subtitle: 'Standard Maintenance Procedure',
-                          icon: Icons.menu_book_rounded,
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFF065F46), Color(0xFF059669)],
-                          ),
-                          iconBg: const Color(0xFFD1FAE5),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const SmpListPage()),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _AppCard(
-                          title: 'Material Requisition',
-                          subtitle: 'Plant Item Request Form',
-                          icon: Icons.post_add_rounded,
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
-                          ),
-                          iconBg: const Color(0xFFE0E7FF),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    const MaterialRequisitionPage(),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
-                ],
-              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: AppTheme.heroGradient,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      gradient: AppTheme.surfaceGlow,
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.accentCyan.withOpacity(0.3),
-                          blurRadius: 16,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.factory_rounded,
-                      color: Colors.white,
-                      size: 28,
-                    ),
+            const SizedBox(height: 8),
+            Text(
+              'Select an application to continue',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.slateText,
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'BLAST FURNACE APPS',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: 1.2,
-                              ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'RINL, Vizag Steel',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppTheme.accentCyan,
-                                fontWeight: FontWeight.w500,
-                              ),
-                        ),
-                      ],
+            ),
+            const SizedBox(height: 32),
+            Row(
+              children: [
+                Expanded(
+                  child: _AppCard(
+                    title: 'Drawings App',
+                    subtitle: 'BF Electrical Drawings',
+                    icon: Icons.architecture_rounded,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF0077B6), Color(0xFF00B4D8)],
                     ),
+                    iconBg: const Color(0xFFE0F2FE),
+                    onTap: () => context.go('/dashboard/drawings'),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: _AppCard(
+                    title: 'Motor Details',
+                    subtitle: 'Name Plate Database',
+                    icon: Icons.electric_meter_rounded,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF0F4C81), Color(0xFF1E40AF)],
+                    ),
+                    iconBg: const Color(0xFFDBEAFE),
+                    onTap: () => context.go('/dashboard/motor-details'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: _AppCard(
+                    title: 'Shift Snags',
+                    subtitle: 'PLC & Hardwire Solutions',
+                    icon: Icons.warning_amber_rounded,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF92400E), Color(0xFFD97706)],
+                    ),
+                    iconBg: const Color(0xFFFEF3C7),
+                    onTap: () => context.go('/dashboard/shift-snags'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: _AppCard(
+                    title: 'SMP',
+                    subtitle: 'Standard Maintenance Procedure',
+                    icon: Icons.menu_book_rounded,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF065F46), Color(0xFF059669)],
+                    ),
+                    iconBg: const Color(0xFFD1FAE5),
+                    onTap: () => context.go('/dashboard/smp'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: _AppCard(
+                    title: 'Material Requisition',
+                    subtitle: 'Plant Item Request Form',
+                    icon: Icons.post_add_rounded,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
+                    ),
+                    iconBg: const Color(0xFFE0E7FF),
+                    onTap: () => context.go('/dashboard/material-requisition'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 40),
+          ],
         ),
       ),
     );

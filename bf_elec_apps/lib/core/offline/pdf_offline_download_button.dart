@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:bf_elec_apps/core/offline/offline_manager.dart';
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -149,6 +150,29 @@ class _PdfOfflineDownloadButtonState extends State<PdfOfflineDownloadButton> {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb || !Platform.isAndroid) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: AppTheme.lightGray,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppTheme.borderGray),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.phone_android_rounded, size: 18, color: AppTheme.mediumGray),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Offline downloads available on Android app',
+                style: TextStyle(color: AppTheme.slateText, fontWeight: FontWeight.w500, fontSize: 13),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     if (_isDownloading) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),

@@ -1,4 +1,5 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
+import 'package:bf_elec_apps/core/widgets/responsive_scaffold.dart';
 import 'package:bf_elec_apps/features/shift_snags/data/repositories/shift_snag_repository.dart';
 import 'package:bf_elec_apps/features/shift_snags/domain/models/shift_snag.dart';
 import 'package:bf_elec_apps/features/shift_snags/presentation/pages/shift_snag_detail_page.dart';
@@ -74,35 +75,13 @@ class _ShiftSnagsPageState extends State<ShiftSnagsPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.softWhite,
-      appBar: AppBar(
-        backgroundColor: AppTheme.deepNavy,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'SHIFT SNAGS',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, letterSpacing: 0.5),
-            ),
-            Text(
-              'Common Complaints & Solutions',
-              style: TextStyle(fontSize: 12, color: AppTheme.accentCyan, fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Refresh from online',
-            onPressed: _loadSnags,
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
-          child: Container(
+    return ResponsiveScaffold(
+      currentRoute: '/dashboard/shift-snags',
+      title: 'Shift Snags',
+      body: Column(
+        children: [
+          _buildSearchBar(),
+          Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -129,11 +108,6 @@ class _ShiftSnagsPageState extends State<ShiftSnagsPage>
               ],
             ),
           ),
-        ),
-      ),
-      body: Column(
-        children: [
-          _buildSearchBar(),
           Expanded(
             child: _isLoading
                 ? const Center(
