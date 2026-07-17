@@ -77,26 +77,10 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
       if (widget.pdfUrl.isNotEmpty) {
         final uri = Uri.parse(widget.pdfUrl);
         if (kIsWeb) {
-          // webview_flutter_web renders an <iframe>; a raw binary PDF does not
-          // display inside it on some browsers. Wrap the PDF in a Google Docs viewer.
+          // Instead of loading HTML string which creates an iframe inside an iframe,
+          // load the Google Docs URL directly into the webview iframe.
           final googleDocsUrl = 'https://docs.google.com/gview?embedded=true&url=${Uri.encodeComponent(uri.toString())}';
-          final html = '''
-            <!DOCTYPE html>
-            <html>
-              <head>
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <style>
-                  html, body { margin: 0; padding: 0; height: 100%; background: #fff; }
-                  iframe { display: block; width: 100%; height: 100%; border: 0; }
-                </style>
-              </head>
-              <body>
-                <iframe src="$googleDocsUrl" allow="fullscreen"></iframe>
-              </body>
-            </html>
-          ''';
-          await _controller.loadHtmlString(html);
+          await _controller.loadRequest(Uri.parse(googleDocsUrl));
         } else {
           await _controller.loadRequest(uri);
         }
