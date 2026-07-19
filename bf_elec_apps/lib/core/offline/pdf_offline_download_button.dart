@@ -47,8 +47,34 @@ class _PdfOfflineDownloadButtonState extends State<PdfOfflineDownloadButton> {
     });
 
     try {
+      final pdfDir = await OfflineManager.getPdfDir();
+      final missingUrls = <String>[];
+      final missingIds = <String>[];
+
+      for (int i = 0; i < widget.pdfUrls.length; i++) {
+        final id = widget.drawingIds[i];
+        final url = widget.pdfUrls[i];
+        final file = File('${pdfDir.path}/$id.pdf');
+        if (!await file.exists()) {
+          missingUrls.add(url);
+          missingIds.add(id);
+        }
+      }
+
+      if (missingUrls.isEmpty) {
+        if (!mounted) return;
+        setState(() {
+          _isDownloading = false;
+          _statusText = null;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('All ${widget.title} are already downloaded'), backgroundColor: AppTheme.successGreen),
+        );
+        return;
+      }
+
       final sizes = <int>[];
-      for (final url in widget.pdfUrls) {
+      for (final url in missingUrls) {
         final size = await _getFileSize(url);
         sizes.add(size);
       }
@@ -74,7 +100,7 @@ class _PdfOfflineDownloadButtonState extends State<PdfOfflineDownloadButton> {
             children: [
               Text('Estimated size: $formattedTotal'),
               const SizedBox(height: 8),
-              Text('Files: ${widget.pdfUrls.length}'),
+              Text('Files to download: ${missingUrls.length} (Skipping ${widget.pdfUrls.length - missingUrls.length} already saved)'),
               const SizedBox(height: 8),
               Text('PDFs will be saved privately on this device.', style: TextStyle(color: AppTheme.slateText)),
             ],
@@ -104,17 +130,16 @@ class _PdfOfflineDownloadButtonState extends State<PdfOfflineDownloadButton> {
         _statusText = 'Downloading PDFs...';
       });
 
-      final pdfDir = await OfflineManager.getPdfDir();
-      for (int i = 0; i < widget.pdfUrls.length; i++) {
-        final url = widget.pdfUrls[i];
-        final drawingId = widget.drawingIds[i];
+      for (int i = 0; i < missingUrls.length; i++) {
+        final url = missingUrls[i];
+        final drawingId = missingIds[i];
 
         try {
           final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 30));
           if (response.statusCode == 200) {
             final file = File('${pdfDir.path}/$drawingId.pdf');
             await file.writeAsBytes(response.bodyBytes);
-            final progress = widget.pdfUrls.isEmpty ? 1.0 : (i + 1) / widget.pdfUrls.length;
+            final progress = missingUrls.isEmpty ? 1.0 : (i + 1) / missingUrls.length;
             setState(() => _progress = progress);
           }
         } catch (e) {

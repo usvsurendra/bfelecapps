@@ -1,6 +1,7 @@
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
 import 'package:bf_elec_apps/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -39,16 +40,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
 
     Future.delayed(const Duration(milliseconds: 3000), () {
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => const LoginPage(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
-            transitionDuration: const Duration(milliseconds: 800),
-          ),
-        );
+        context.go('/login');
       }
     });
   }

@@ -1,10 +1,10 @@
-import 'dart:convert';
+import 'dart:io';
 import 'package:bf_elec_apps/core/offline/offline_manager.dart';
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class DrawingPdfPage extends StatefulWidget {
   final String title;
@@ -26,36 +26,59 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
   bool _isLoading = true;
   bool _hasError = false;
   String? _errorMessage;
-  late final WebViewController _controller;
+  bool _isOffline = false;
+  
+  File? _pdfFile;
+  
+  // Search state
+  final PdfViewerController _pdfViewerController = PdfViewerController();
+  PdfTextSearchResult _searchResult = PdfTextSearchResult();
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
+
+  Future<void> _downloadCurrentPdfForOffline() async {
+    if (_pdfFile == null || widget.drawingId.isEmpty) return;
+    try {
+      final pdfDir = await OfflineManager.getPdfDir();
+      final offlineFile = File('${pdfDir.path}/${widget.drawingId}.pdf');
+      await _pdfFile!.copy(offlineFile.path);
+      if (mounted) {
+        setState(() => _isOffline = true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('PDF saved for offline use'),
+            backgroundColor: AppTheme.successGreen,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save PDF: $e'),
+            backgroundColor: AppTheme.dangerRed,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _controller = WebViewController();
-    if (!kIsWeb) {
-      _controller
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setNavigationDelegate(
-          NavigationDelegate(
-            onPageStarted: (_) {
-              if (mounted) setState(() => _isLoading = true);
-            },
-            onPageFinished: (_) {
-              if (mounted) setState(() => _isLoading = false);
-            },
-            onWebResourceError: (error) {
-              if (mounted) {
-                setState(() {
-                  _hasError = true;
-                  _errorMessage = error.description;
-                  _isLoading = false;
-                });
-              }
-            },
-          ),
-        );
-    }
     _loadPdf();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _pdfViewerController.dispose();
+    _searchResult.removeListener(_onSearchResultUpdated);
+    super.dispose();
+  }
+
+  void _onSearchResultUpdated() {
+    if (mounted) setState(() {});
   }
 
   Future<void> _loadPdf() async {
@@ -63,29 +86,31 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
       _isLoading = true;
       _hasError = false;
       _errorMessage = null;
+      _pdfFile = null;
+      _isOffline = false;
+      _searchResult.clear();
+      _isSearching = false;
     });
 
     try {
       if (widget.drawingId.isNotEmpty && OfflineManager.isOfflineSupported) {
         final localFile = await OfflineManager.getPdfFile(widget.drawingId);
         if (localFile != null && await localFile.exists()) {
-          await _controller.loadRequest(Uri.file(localFile.path));
+          _pdfFile = localFile;
+          _isOffline = true;
           if (mounted) setState(() => _isLoading = false);
           return;
         }
       }
 
       if (widget.pdfUrl.isNotEmpty) {
-        final uri = Uri.parse(widget.pdfUrl);
-        if (kIsWeb) {
-          // Instead of loading HTML string which creates an iframe inside an iframe,
-          // load the Google Docs URL directly into the webview iframe.
-          final googleDocsUrl = 'https://docs.google.com/gview?embedded=true&url=${Uri.encodeComponent(uri.toString())}';
-          await _controller.loadRequest(Uri.parse(googleDocsUrl));
+        if (!kIsWeb) {
+          // Download to temp file to support "Save Offline" later
+          await _tryDownloadAndOpenPdf(Uri.parse(widget.pdfUrl));
         } else {
-          await _controller.loadRequest(uri);
+          // On Web, we can just use network URL natively through SfPdfViewer
+          if (mounted) setState(() => _isLoading = false);
         }
-        if (mounted) setState(() => _isLoading = false);
       } else {
         if (mounted) {
           setState(() {
@@ -106,53 +131,191 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
     }
   }
 
+  Future<void> _tryDownloadAndOpenPdf(Uri uri) async {
+    try {
+      final response = await http.get(
+        uri,
+        headers: const {'User-Agent': 'Mozilla/5.0 BFELECAPPS'},
+      ).timeout(const Duration(seconds: 30));
+      if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
+        final tempDir = await Directory.systemTemp.createTemp('bfelec_');
+        final tempFile = File('${tempDir.path}/${widget.drawingId.isEmpty ? "drawing" : widget.drawingId}.pdf');
+        await tempFile.writeAsBytes(response.bodyBytes);
+        _pdfFile = tempFile;
+        if (mounted) setState(() => _isLoading = false);
+      } else {
+        if (mounted) {
+          setState(() {
+            _hasError = true;
+            _errorMessage = 'Unable to download PDF';
+            _isLoading = false;
+          });
+        }
+      }
+    } on SocketException catch (_) {
+      if (mounted) {
+        setState(() {
+          _hasError = true;
+          _errorMessage = 'Network unavailable. Please check your internet connection.';
+          _isLoading = false;
+        });
+      }
+    } on HttpException catch (_) {
+      if (mounted) {
+        setState(() {
+          _hasError = true;
+          _errorMessage = 'Network error. Please check your internet connection.';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _hasError = true;
+          _errorMessage = e.toString();
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.softWhite,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                style: const TextStyle(color: AppTheme.darkText),
+                decoration: const InputDecoration(
+                  hintText: 'Search in PDF...',
+                  border: InputBorder.none,
+                ),
+                textInputAction: TextInputAction.search,
+                onSubmitted: (value) async {
+                  if (value.isNotEmpty) {
+                    _searchResult.removeListener(_onSearchResultUpdated);
+                    _searchResult = await _pdfViewerController.searchText(value);
+                    _searchResult.addListener(_onSearchResultUpdated);
+                    if (mounted) setState(() {});
+                  }
+                },
+              )
+            : Text(widget.title),
         backgroundColor: AppTheme.pureWhite,
         foregroundColor: AppTheme.primaryBlue,
         elevation: 0,
         actions: [
+          if (_isSearching && _searchResult.hasResult) ...[
+            IconButton(
+              icon: const Icon(Icons.keyboard_arrow_up_rounded),
+              onPressed: () {
+                _searchResult.previousInstance();
+                setState(() {});
+              },
+            ),
+            Center(
+              child: Text(
+                '${_searchResult.currentInstanceIndex}/${_searchResult.totalInstanceCount}',
+                style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.w600),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.keyboard_arrow_down_rounded),
+              onPressed: () {
+                _searchResult.nextInstance();
+                setState(() {});
+              },
+            ),
+          ],
+          IconButton(
+            icon: Icon(_isSearching ? Icons.close_rounded : Icons.search_rounded),
+            tooltip: _isSearching ? 'Close Search' : 'Search',
+            onPressed: () {
+              setState(() {
+                _isSearching = !_isSearching;
+                if (!_isSearching) {
+                  _searchResult.removeListener(_onSearchResultUpdated);
+                  _searchResult.clear();
+                  _searchController.clear();
+                }
+              });
+            },
+          ),
+          if (!kIsWeb && Platform.isAndroid && !_isOffline && _pdfFile != null && widget.drawingId.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.download_rounded),
+              tooltip: 'Save Offline',
+              onPressed: _downloadCurrentPdfForOffline,
+            ),
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
             tooltip: 'Reload',
             onPressed: _loadPdf,
           ),
-          if (widget.pdfUrl.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.open_in_browser_rounded),
-              tooltip: 'Open in browser',
-              onPressed: () async {
-                final uri = Uri.parse(widget.pdfUrl);
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri, mode: LaunchMode.externalApplication);
-                }
-              },
-            ),
         ],
       ),
-      body: widget.pdfUrl.isEmpty && (widget.drawingId.isEmpty || _hasError)
-          ? _buildEmptyState()
-          : _hasError
-              ? _buildErrorState()
-              : Stack(
-                  children: [
-                    Positioned.fill(
-                      child: WebViewWidget(controller: _controller),
-                    ),
-                    if (_isLoading)
-                      Container(
-                        color: AppTheme.softWhite,
-                        child: const Center(
-                          child: CircularProgressIndicator(color: AppTheme.primaryBlue, strokeWidth: 3),
-                        ),
-                      ),
-                  ],
-                ),
+      body: _buildBody(),
     );
+  }
+
+  Widget _buildBody() {
+    if (_hasError) {
+      return _buildErrorState();
+    }
+
+    if (_isLoading) {
+      return Container(
+        color: AppTheme.softWhite,
+        child: const Center(
+          child: CircularProgressIndicator(color: AppTheme.primaryBlue, strokeWidth: 3),
+        ),
+      );
+    }
+
+    if (widget.pdfUrl.isEmpty && (widget.drawingId.isEmpty || _pdfFile == null)) {
+      return _buildEmptyState();
+    }
+
+    if (!kIsWeb && _pdfFile != null) {
+      return SfPdfViewer.file(
+        _pdfFile!,
+        controller: _pdfViewerController,
+        canShowScrollHead: false,
+        canShowScrollStatus: false,
+        currentSearchTextHighlightColor: Colors.orange.withValues(alpha: 0.6),
+        otherSearchTextHighlightColor: Colors.yellow.withValues(alpha: 0.3),
+        onDocumentLoadFailed: (details) {
+          if (mounted) {
+            setState(() {
+              _hasError = true;
+              _errorMessage = details.description;
+            });
+          }
+        },
+      );
+    } else if (kIsWeb && widget.pdfUrl.isNotEmpty) {
+      return SfPdfViewer.network(
+        widget.pdfUrl,
+        controller: _pdfViewerController,
+        canShowScrollHead: false,
+        canShowScrollStatus: false,
+        currentSearchTextHighlightColor: Colors.orange.withValues(alpha: 0.6),
+        otherSearchTextHighlightColor: Colors.yellow.withValues(alpha: 0.3),
+        onDocumentLoadFailed: (details) {
+          if (mounted) {
+            setState(() {
+              _hasError = true;
+              _errorMessage = details.description;
+            });
+          }
+        },
+      );
+    }
+    
+    return _buildEmptyState();
   }
 
   Widget _buildEmptyState() {
@@ -188,10 +351,10 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
                   ),
             ),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               'No PDF link available for this drawing.',
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15, color: AppTheme.slateText),
+              style: TextStyle(fontSize: 15, color: AppTheme.slateText),
             ),
           ],
         ),
@@ -230,37 +393,17 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
               style: const TextStyle(fontSize: 14, color: AppTheme.slateText),
             ),
             const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _loadPdf,
-                    icon: const Icon(Icons.refresh_rounded),
-                    label: const Text('Retry'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryBlue,
-                      foregroundColor: AppTheme.pureWhite,
-                    ),
-                  ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _loadPdf,
+                icon: const Icon(Icons.refresh_rounded),
+                label: const Text('Retry'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryBlue,
+                  foregroundColor: AppTheme.pureWhite,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () async {
-                      final uri = Uri.parse(widget.pdfUrl);
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri, mode: LaunchMode.externalApplication);
-                      }
-                    },
-                    icon: const Icon(Icons.open_in_browser_rounded),
-                    label: const Text('Browser'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.successGreen,
-                      foregroundColor: AppTheme.pureWhite,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
         ),
