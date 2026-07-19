@@ -1,4 +1,5 @@
 import 'package:bf_elec_apps/features/shift_snags/domain/models/shift_snag.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,16 +16,35 @@ class ShiftSnagRepository {
 
     // 1. Try fetching from Google Sheets online
     try {
-      final response = await http
-          .get(Uri.parse(_csvUrl))
-          .timeout(const Duration(seconds: 10));
-      if (response.statusCode == 200) {
-        csvData = response.body;
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(_cacheKey, csvData);
+      final List<String> fetchUrls = [];
+      if (kIsWeb) {
+        // Use CORS proxies on web
+        final encodedUrl = Uri.encodeComponent(_csvUrl);
+        fetchUrls.add('https://corsproxy.io/?url=$encodedUrl');
+        fetchUrls.add('https://api.allorigins.win/raw?url=$encodedUrl');
+      } else {
+        // Direct request on native platforms
+        fetchUrls.add(_csvUrl);
+      }
+
+      for (final url in fetchUrls) {
+        try {
+          final response = await http
+              .get(Uri.parse(url))
+              .timeout(const Duration(seconds: 10));
+          if (response.statusCode == 200 && response.body.isNotEmpty) {
+            csvData = response.body;
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString(_cacheKey, csvData);
+            break; // Success, break out of retry loop
+          }
+        } catch (_) {
+          // If this proxy/url fails, loop will try the next one
+          continue;
+        }
       }
     } catch (_) {
-      // Network or CORS failure — try cache
+      // Complete network failure — try cache
     }
 
     // 2. Load from cache
