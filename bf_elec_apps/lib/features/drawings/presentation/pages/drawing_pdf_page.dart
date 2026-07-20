@@ -297,8 +297,11 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
         },
       );
     } else if (kIsWeb && widget.pdfUrl.isNotEmpty) {
+      // Use a CORS proxy for web to bypass WordPress/external domain CORS restrictions
+      final webSafeUrl = 'https://corsproxy.io/?${Uri.encodeComponent(widget.pdfUrl)}';
+      
       return SfPdfViewer.network(
-        widget.pdfUrl,
+        webSafeUrl,
         controller: _pdfViewerController,
         canShowScrollHead: false,
         canShowScrollStatus: false,
