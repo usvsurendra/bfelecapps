@@ -1,3 +1,8 @@
+import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
+import 'package:open_filex/open_filex.dart';
+
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
 import 'package:bf_elec_apps/core/widgets/responsive_scaffold.dart';
 import 'package:bf_elec_apps/features/smp/data/repositories/smp_repository.dart';
@@ -284,13 +289,32 @@ class _SmpCard extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () {
+        onTap: () async {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Opening: ${item.title}'),
               behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 1),
             ),
           );
+          try {
+            final byteData = await rootBundle.load(item.fileUrl);
+            final tempDir = await getTemporaryDirectory();
+            final fileName = item.fileUrl.split('/').last;
+            final tempFile = File('${tempDir.path}/$fileName');
+            await tempFile.writeAsBytes(byteData.buffer.asUint8List(), flush: true);
+            await OpenFilex.open(tempFile.path);
+          } catch (e) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Error opening file: $e'),
+                  backgroundColor: Colors.red,
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            }
+          }
         },
         child: Padding(
           padding: const EdgeInsets.all(16),

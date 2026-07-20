@@ -52,8 +52,5 @@ class ShiftSnag {
   bool get hasPlcData => plcTitle.isNotEmpty && plcTitle != 'ok';
 
   /// Check if this snag has Hardwire data.
-  bool get hasHardwireData =>
-      hardwireTitle.isNotEmpty &&
-      hardwireTitle != 'ok' &&
-      hardwireTitle != 'OK';
+  bool get hasHardwireData => hardwireTitle.isNotEmpty;
 }

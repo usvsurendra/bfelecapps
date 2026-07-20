@@ -23,29 +23,6 @@ class ResponsiveScaffold extends ConsumerStatefulWidget {
 }
 
 class _ResponsiveScaffoldState extends ConsumerState<ResponsiveScaffold> {
-  int _getSelectedIndex() {
-    final route = widget.currentRoute;
-    if (route.contains('drawings')) return 0;
-    if (route.contains('motor')) return 1;
-    if (route.contains('shift')) return 2;
-    if (route.contains('smp')) return 3;
-    if (route.contains('material')) return 4;
-    if (route.contains('profile')) return 5;
-    return -1;
-  }
-
-  void _onItemTapped(int index) {
-    final routes = [
-      '/dashboard/drawings',
-      '/dashboard/motor-details',
-      '/dashboard/shift-snags',
-      '/dashboard/smp',
-      '/dashboard/material-requisition',
-      '/profile',
-    ];
-    if (index < routes.length) context.go(routes[index]);
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDesktop = ResponsiveLayout.isDesktop(context);
@@ -57,6 +34,7 @@ class _ResponsiveScaffoldState extends ConsumerState<ResponsiveScaffold> {
           ? null
           : AppBar(
               backgroundColor: AppTheme.sidebarBg,
+              iconTheme: const IconThemeData(color: Colors.white),
               title: Row(
                 children: [
                   const Icon(Icons.factory_rounded, color: Colors.white, size: 22),
@@ -78,6 +56,7 @@ class _ResponsiveScaffoldState extends ConsumerState<ResponsiveScaffold> {
                 ),
               ],
             ),
+      drawer: isDesktop ? null : Drawer(child: _buildSidebar()),
       body: Row(
         children: [
           if (isDesktop) _buildSidebar(),
@@ -96,33 +75,6 @@ class _ResponsiveScaffoldState extends ConsumerState<ResponsiveScaffold> {
           ),
         ],
       ),
-      bottomNavigationBar: isDesktop
-          ? null
-          : Container(
-              decoration: const BoxDecoration(
-                color: AppTheme.sidebarBg,
-                border: Border(top: BorderSide(color: Color(0xFF2D2D6B), width: 1)),
-              ),
-              child: BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                currentIndex: _getSelectedIndex() >= 5 ? 0 : _getSelectedIndex(),
-                onTap: _onItemTapped,
-                items: const [
-                  BottomNavigationBarItem(icon: Icon(Icons.architecture_rounded), label: 'Drawings'),
-                  BottomNavigationBarItem(icon: Icon(Icons.electric_meter_rounded), label: 'Motors'),
-                  BottomNavigationBarItem(icon: Icon(Icons.warning_amber_rounded), label: 'Snags'),
-                  BottomNavigationBarItem(icon: Icon(Icons.menu_book_rounded), label: 'SMP'),
-                  BottomNavigationBarItem(icon: Icon(Icons.post_add_rounded), label: 'Requisition'),
-                  BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'Profile'),
-                ],
-                backgroundColor: AppTheme.sidebarBg,
-                selectedItemColor: const Color(0xFFA5B4FC),
-                unselectedItemColor: AppTheme.sidebarInactive,
-                elevation: 0,
-                selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11),
-                unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-              ),
-            ),
     );
   }
 
@@ -239,11 +191,17 @@ class _ResponsiveScaffoldState extends ConsumerState<ResponsiveScaffold> {
                   index: 4,
                   route: '/dashboard/material-requisition',
                 ),
+                _buildNavItem(
+                  icon: Icons.settings_rounded,
+                  label: 'Settings/Parameters',
+                  index: 5,
+                  route: '/dashboard/settings',
+                ),
                 _buildSectionLabel('ACCOUNT'),
                 _buildNavItem(
                   icon: Icons.person_rounded,
                   label: 'Profile Settings',
-                  index: 5,
+                  index: 6,
                   route: '/profile',
                 ),
               ],
@@ -322,7 +280,12 @@ class _ResponsiveScaffoldState extends ConsumerState<ResponsiveScaffold> {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
-          onTap: () => context.go(route),
+          onTap: () {
+            if (!ResponsiveLayout.isDesktop(context)) {
+              Navigator.of(context).pop();
+            }
+            context.go(route);
+          },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(

@@ -77,7 +77,7 @@ class ShiftSnagRepository {
     for (int i = 1; i < rows.length; i++) {
       try {
         final snag = ShiftSnag.fromCsvFields(rows[i]);
-        if (snag.plcTitle.isNotEmpty) {
+        if (snag.plcTitle.isNotEmpty || snag.hardwireTitle.isNotEmpty) {
           snags.add(snag);
         }
       } catch (_) {

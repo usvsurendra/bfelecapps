@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:bf_elec_apps/core/theme/app_theme.dart';
+import 'package:bf_elec_apps/core/widgets/responsive_scaffold.dart';
 import '../../data/models/motor_model.dart';
 import '../providers/motor_provider.dart';
 
@@ -14,36 +15,34 @@ class MotorSearchPage extends ConsumerWidget {
     final isAdvanced = ref.watch(isAdvancedSearchProvider);
     final filteredMotors = ref.watch(filteredMotorsProvider);
 
-    return Scaffold(
-      backgroundColor: AppTheme.softWhite,
-      appBar: AppBar(
-        title: const Text('Motor Name Plate Details', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: AppTheme.primaryBlue,
-        foregroundColor: AppTheme.pureWhite,
-        elevation: 0,
-      ),
-      body: asyncMotors.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
-        data: (allMotors) {
-          return Column(
-            children: [
-              _buildSearchHeader(context, ref, isAdvanced, filteredMotors.length),
-              if (isAdvanced) _buildAdvancedFilters(context, ref),
-              if (!isAdvanced) _buildSimpleSearch(context, ref),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: filteredMotors.length,
-                  itemBuilder: (context, index) {
-                    final motor = filteredMotors[index];
-                    return _buildMotorCard(context, motor);
-                  },
+    return ResponsiveScaffold(
+      currentRoute: '/dashboard/motor-details',
+      title: 'Motor Details',
+      body: Container(
+        color: AppTheme.softWhite,
+        child: asyncMotors.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) => Center(child: Text('Error: $err', style: const TextStyle(color: Colors.red))),
+          data: (allMotors) {
+            return Column(
+              children: [
+                _buildSearchHeader(context, ref, isAdvanced, filteredMotors.length),
+                if (isAdvanced) _buildAdvancedFilters(context, ref),
+                if (!isAdvanced) _buildSimpleSearch(context, ref),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(12),
+                    itemCount: filteredMotors.length,
+                    itemBuilder: (context, index) {
+                      final motor = filteredMotors[index];
+                      return _buildMotorCard(context, motor);
+                    },
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

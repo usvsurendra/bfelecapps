@@ -11,6 +11,9 @@ import 'package:bf_elec_apps/features/motors/presentation/pages/motor_details_pa
 import 'package:bf_elec_apps/features/motors/data/models/motor_model.dart';
 import 'package:bf_elec_apps/features/shift_snags/presentation/pages/shift_snags_page.dart';
 import 'package:bf_elec_apps/features/smp/presentation/pages/smp_list_page.dart';
+import 'package:bf_elec_apps/features/settings/presentation/pages/settings_list_page.dart';
+import 'package:bf_elec_apps/features/settings/presentation/pages/settings_detail_page.dart';
+import 'package:bf_elec_apps/features/settings/domain/models/settings_item.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -61,6 +64,17 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/dashboard/material-requisition',
         builder: (context, state) => const MaterialRequisitionPage(),
+      ),
+      GoRoute(
+        path: '/dashboard/settings',
+        builder: (context, state) => const SettingsListPage(),
+      ),
+      GoRoute(
+        path: '/dashboard/settings/detail',
+        builder: (context, state) {
+          final item = state.extra as SettingsItem;
+          return SettingsDetailPage(item: item);
+        },
       ),
     ],
   );

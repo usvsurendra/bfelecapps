@@ -9,7 +9,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveScaffold(
-      currentRoute: '/dashboard/drawings',
+      currentRoute: '/dashboard',
       title: 'Dashboard',
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -58,9 +58,9 @@ class DashboardPage extends StatelessWidget {
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFF0F4C81), Color(0xFF1E40AF)],
+                      colors: [Color(0xFF0D9488), Color(0xFF0F766E)],
                     ),
-                    iconBg: const Color(0xFFDBEAFE),
+                    iconBg: const Color(0xFFCCFBF1),
                     onTap: () => context.go('/dashboard/motor-details'),
                   ),
                 ),
@@ -77,17 +77,13 @@ class DashboardPage extends StatelessWidget {
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFF92400E), Color(0xFFD97706)],
+                      colors: [Color(0xFFF97316), Color(0xFFEA580C)],
                     ),
-                    iconBg: const Color(0xFFFEF3C7),
+                    iconBg: const Color(0xFFFFEDD5),
                     onTap: () => context.go('/dashboard/shift-snags'),
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
+                const SizedBox(width: 20),
                 Expanded(
                   child: _AppCard(
                     title: 'SMP',
@@ -96,9 +92,9 @@ class DashboardPage extends StatelessWidget {
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFF065F46), Color(0xFF059669)],
+                      colors: [Color(0xFF8B5CF6), Color(0xFFD946EF)],
                     ),
-                    iconBg: const Color(0xFFD1FAE5),
+                    iconBg: const Color(0xFFF3E8FF),
                     onTap: () => context.go('/dashboard/smp'),
                   ),
                 ),
@@ -115,10 +111,25 @@ class DashboardPage extends StatelessWidget {
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
+                      colors: [Color(0xFF10B981), Color(0xFF047857)],
                     ),
-                    iconBg: const Color(0xFFE0E7FF),
+                    iconBg: const Color(0xFFD1FAE5),
                     onTap: () => context.go('/dashboard/material-requisition'),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: _AppCard(
+                    title: 'Settings/Parameters',
+                    subtitle: 'Parameters & Config',
+                    icon: Icons.settings_rounded,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF475569), Color(0xFF1E293B)],
+                    ),
+                    iconBg: const Color(0xFFF1F5F9),
+                    onTap: () => context.go('/dashboard/settings'),
                   ),
                 ),
               ],

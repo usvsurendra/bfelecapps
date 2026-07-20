@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _login(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('is_logged_in', true);
-    if (context.mounted) context.go('/dashboard/drawings');
+    if (context.mounted) context.go('/dashboard');
   }
 
   Widget _buildProfileAvatar() {
