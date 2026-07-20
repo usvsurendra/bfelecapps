@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DrawingPdfPage extends StatefulWidget {
   final String title;
@@ -294,27 +295,58 @@ class _DrawingPdfPageState extends State<DrawingPdfPage> {
               _errorMessage = details.description;
             });
           }
-        },
-      );
     } else if (kIsWeb && widget.pdfUrl.isNotEmpty) {
-      // Use a CORS proxy for web to bypass WordPress/external domain CORS restrictions
-      final webSafeUrl = 'https://corsproxy.io/?${Uri.encodeComponent(widget.pdfUrl)}';
-      
-      return SfPdfViewer.network(
-        webSafeUrl,
-        controller: _pdfViewerController,
-        canShowScrollHead: false,
-        canShowScrollStatus: false,
-        currentSearchTextHighlightColor: Colors.orange.withValues(alpha: 0.6),
-        otherSearchTextHighlightColor: Colors.yellow.withValues(alpha: 0.3),
-        onDocumentLoadFailed: (details) {
-          if (mounted) {
-            setState(() {
-              _hasError = true;
-              _errorMessage = details.description;
-            });
-          }
-        },
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryBlue.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Icon(Icons.picture_as_pdf_rounded, size: 40, color: AppTheme.primaryBlue),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Open Drawing',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: AppTheme.deepNavy,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'For the web version, this PDF drawing will securely open in a new browser tab.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14, color: AppTheme.slateText),
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
+                onPressed: () {
+                  launchUrl(
+                    Uri.parse(widget.pdfUrl),
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+                icon: const Icon(Icons.open_in_new_rounded),
+                label: const Text('Open PDF Drawing'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryBlue,
+                  foregroundColor: AppTheme.pureWhite,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     }
     
