@@ -13,121 +13,131 @@ class DashboardPage extends StatelessWidget {
     return ResponsiveScaffold(
       currentRoute: '/dashboard',
       title: 'Dashboard',
-      body: SingleChildScrollView(
+      body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 8),
-            Text(
-              'Welcome to the BF Apps Portal',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.deepNavy,
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.all(24),
+            sliver: SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8),
+                  Text(
+                    'Welcome to the BF Apps Portal',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.deepNavy,
+                        ),
                   ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Select an application to continue',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.slateText,
+                        ),
+                  ),
+                  const SizedBox(height: 32),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _AppCard(
+                          title: 'Drawings App',
+                          subtitle: 'BF Electrical Drawings',
+                          icon: Icons.architecture_rounded,
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF0077B6), Color(0xFF00B4D8)],
+                          ),
+                          iconBg: const Color(0xFFE0F2FE),
+                          onTap: () => context.push('/dashboard/drawings'),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: _AppCard(
+                          title: 'Motor Details',
+                          subtitle: 'Name Plate Database',
+                          icon: Icons.electric_meter_rounded,
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF0D9488), Color(0xFF0F766E)],
+                          ),
+                          iconBg: const Color(0xFFCCFBF1),
+                          onTap: () => context.push('/dashboard/motor-details'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _AppCard(
+                          title: 'Shift Snags',
+                          subtitle: 'PLC & Hardwire Solutions',
+                          icon: Icons.warning_amber_rounded,
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFFF97316), Color(0xFFEA580C)],
+                          ),
+                          iconBg: const Color(0xFFFFEDD5),
+                          onTap: () => context.push('/dashboard/shift-snags'),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: _AppCard(
+                          title: 'Material Requisition',
+                          subtitle: 'Plant Item Request Form',
+                          icon: Icons.post_add_rounded,
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF10B981), Color(0xFF047857)],
+                          ),
+                          iconBg: const Color(0xFFD1FAE5),
+                          onTap: () => context.push('/dashboard/material-requisition'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _AppCard(
+                          title: 'Settings/Parameters',
+                          subtitle: 'Parameters & Config',
+                          icon: Icons.settings_rounded,
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF475569), Color(0xFF1E293B)],
+                          ),
+                          iconBg: const Color(0xFFF1F5F9),
+                          onTap: () => context.push('/dashboard/settings'),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      const Expanded(child: SizedBox()),
+                    ],
+                  ),
+                  
+                  // Pushes footer to the very bottom!
+                  const Spacer(),
+                  const SizedBox(height: 16),
+                  const _DashboardFooter(),
+                  const SizedBox(height: 16),
+                ],
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Select an application to continue',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppTheme.slateText,
-                  ),
-            ),
-            const SizedBox(height: 32),
-            Row(
-              children: [
-                Expanded(
-                  child: _AppCard(
-                    title: 'Drawings App',
-                    subtitle: 'BF Electrical Drawings',
-                    icon: Icons.architecture_rounded,
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF0077B6), Color(0xFF00B4D8)],
-                    ),
-                    iconBg: const Color(0xFFE0F2FE),
-                    onTap: () => context.push('/dashboard/drawings'),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: _AppCard(
-                    title: 'Motor Details',
-                    subtitle: 'Name Plate Database',
-                    icon: Icons.electric_meter_rounded,
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF0D9488), Color(0xFF0F766E)],
-                    ),
-                    iconBg: const Color(0xFFCCFBF1),
-                    onTap: () => context.push('/dashboard/motor-details'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: _AppCard(
-                    title: 'Shift Snags',
-                    subtitle: 'PLC & Hardwire Solutions',
-                    icon: Icons.warning_amber_rounded,
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFFF97316), Color(0xFFEA580C)],
-                    ),
-                    iconBg: const Color(0xFFFFEDD5),
-                    onTap: () => context.push('/dashboard/shift-snags'),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: _AppCard(
-                    title: 'Material Requisition',
-                    subtitle: 'Plant Item Request Form',
-                    icon: Icons.post_add_rounded,
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF10B981), Color(0xFF047857)],
-                    ),
-                    iconBg: const Color(0xFFD1FAE5),
-                    onTap: () => context.push('/dashboard/material-requisition'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: _AppCard(
-                    title: 'Settings/Parameters',
-                    subtitle: 'Parameters & Config',
-                    icon: Icons.settings_rounded,
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF475569), Color(0xFF1E293B)],
-                    ),
-                    iconBg: const Color(0xFFF1F5F9),
-                    onTap: () => context.push('/dashboard/settings'),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                const Expanded(child: SizedBox()),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const _DashboardFooter(),
-            const SizedBox(height: 16),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
