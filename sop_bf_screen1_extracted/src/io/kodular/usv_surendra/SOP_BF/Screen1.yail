@@ -1,0 +1,206 @@
+#|
+$Source $Yail
+|#
+
+(define-form io.kodular.usv_surendra.SOP_BF.Screen1 Screen1)
+(require <com.google.youngandroid.runtime>)
+
+(def g$HARDWIRE (call-yail-primitive make-yail-list (*list-for-runtime* ) '() "make a list"))
+(def g$HARDWIRE_DATA (call-yail-primitive make-yail-list (*list-for-runtime* ) '() "make a list"))
+(def g$PLC_LIST (call-yail-primitive make-yail-list (*list-for-runtime* ) '() "make a list"))
+(def g$HARDWIRE_LIST (call-yail-primitive make-yail-list (*list-for-runtime* ) '() "make a list"))
+(def g$PLC (call-yail-primitive make-yail-list (*list-for-runtime* ) '() "make a list"))
+(def g$PLC_DATA (call-yail-primitive make-yail-list (*list-for-runtime* ) '() "make a list"))
+;;; Screen1
+
+(do-after-form-creation (set-and-coerce-property! 'Screen1 'AppId "452786292247830587" 'text)
+ (set-and-coerce-property! 'Screen1 'AppName "SOP_BF" 'text)
+ (set-and-coerce-property! 'Screen1 'MinSdk 31 'number)
+ (set-and-coerce-property! 'Screen1 'ReceiveSharedText "none" 'text)
+ (set-and-coerce-property! 'Screen1 'Scrollable #t 'boolean)
+ (set-and-coerce-property! 'Screen1 'ShowOptionsMenu #f 'boolean)
+ (set-and-coerce-property! 'Screen1 'Title " " 'text)
+)
+
+(define-event Screen1 Initialize()(set-this-form)
+    (call-component-method 'View_Pager1 'AddComponentToView (*list-for-runtime* (get-component Vertical_Arrangement1)  "PLC") '(component text))(call-component-method 'View_Pager1 'AddComponentToView (*list-for-runtime* (get-component Vertical_Arrangement2)  "HARDWIRE") '(component text))(call-component-method 'Spreadsheet_Extension1 'GetColumn (*list-for-runtime* "A,B") '(text)))
+;;; Horizontal_Arrangement1
+
+(add-component Screen1 com.google.appinventor.components.runtime.HorizontalArrangement Horizontal_Arrangement1 
+(set-and-coerce-property! 'Horizontal_Arrangement1 'AlignHorizontal 2 'number)
+
+(set-and-coerce-property! 'Horizontal_Arrangement1 'Width -2 'number)
+
+)
+
+;;; Card_UPDATE
+
+(add-component Horizontal_Arrangement1 com.google.appinventor.components.runtime.MakeroidCardView Card_UPDATE 
+(set-and-coerce-property! 'Card_UPDATE 'BackgroundColor #xFF00BCD3 'number)
+
+(set-and-coerce-property! 'Card_UPDATE 'CornerRadius 50 'number)
+
+(set-and-coerce-property! 'Card_UPDATE 'FullClickable #t 'boolean)
+
+(set-and-coerce-property! 'Card_UPDATE 'Visible #f 'boolean)
+
+)
+
+;;; Label1
+
+(add-component Card_UPDATE com.google.appinventor.components.runtime.Label Label1 
+(set-and-coerce-property! 'Label1 'Text "UPDATE" 'text)
+
+(set-and-coerce-property! 'Label1 'TextColor #xFFFFFFFF 'number)
+
+)
+
+;;; View_Pager1
+
+(add-component Screen1 com.google.appinventor.components.runtime.MakeroidViewPager View_Pager1 
+)
+
+;;; Vertical_Arrangement1
+
+(add-component Screen1 com.google.appinventor.components.runtime.VerticalArrangement Vertical_Arrangement1 
+(set-and-coerce-property! 'Vertical_Arrangement1 'AlignHorizontal 3 'number)
+
+(set-and-coerce-property! 'Vertical_Arrangement1 'BackgroundColor #xFEF9C3B1 'number)
+
+(set-and-coerce-property! 'Vertical_Arrangement1 'Width -2 'number)
+
+)
+
+;;; Card_View1
+
+(add-component Vertical_Arrangement1 com.google.appinventor.components.runtime.MakeroidCardView Card_View1 
+(set-and-coerce-property! 'Card_View1 'AlignHorizontal 3 'number)
+
+(set-and-coerce-property! 'Card_View1 'AlignVertical 2 'number)
+
+(set-and-coerce-property! 'Card_View1 'BackgroundColor #xFEB6FDB6 'number)
+
+(set-and-coerce-property! 'Card_View1 'ContentPaddingBottom 2 'number)
+
+(set-and-coerce-property! 'Card_View1 'ContentPaddingLeft 2 'number)
+
+(set-and-coerce-property! 'Card_View1 'ContentPaddingRight 2 'number)
+
+(set-and-coerce-property! 'Card_View1 'ContentPaddingTop 2 'number)
+
+(set-and-coerce-property! 'Card_View1 'CornerRadius 200 'number)
+
+(set-and-coerce-property! 'Card_View1 'Visible #f 'boolean)
+
+(set-and-coerce-property! 'Card_View1 'Width -1080 'number)
+
+)
+
+;;; Card_View2
+
+(add-component Card_View1 com.google.appinventor.components.runtime.MakeroidCardView Card_View2 
+(set-and-coerce-property! 'Card_View2 'AlignHorizontal 3 'number)
+
+(set-and-coerce-property! 'Card_View2 'ContentPaddingBottom 2 'number)
+
+(set-and-coerce-property! 'Card_View2 'ContentPaddingLeft 2 'number)
+
+(set-and-coerce-property! 'Card_View2 'ContentPaddingRight 2 'number)
+
+(set-and-coerce-property! 'Card_View2 'ContentPaddingTop 2 'number)
+
+(set-and-coerce-property! 'Card_View2 'CornerRadius 100 'number)
+
+(set-and-coerce-property! 'Card_View2 'Elevation 0 'number)
+
+(set-and-coerce-property! 'Card_View2 'Height -2 'number)
+
+(set-and-coerce-property! 'Card_View2 'Width -2 'number)
+
+)
+
+;;; Text_Box1
+
+(add-component Card_View2 com.google.appinventor.components.runtime.TextBox Text_Box1 
+(set-and-coerce-property! 'Text_Box1 'Height -2 'number)
+
+(set-and-coerce-property! 'Text_Box1 'Hint "Hint for Text_Box1" 'text)
+
+)
+
+;;; List_View1
+
+(add-component Vertical_Arrangement1 com.google.appinventor.components.runtime.ListView List_View1 
+(set-and-coerce-property! 'List_View1 'BackgroundColor #x00FFFFFF 'number)
+
+)
+
+(define-event List_View1 AfterPicking()(set-this-form)
+    (call-yail-primitive open-another-screen-with-start-value (*list-for-runtime* "DATA" (call-yail-primitive yail-list-get-item (*list-for-runtime* (get-var g$PLC_DATA) (call-yail-primitive yail-list-index (*list-for-runtime* (get-property 'List_View1 'Selection) (get-var g$PLC)) '(any list) "index in list")) '(list number) "select list item")) '(text any) "open another screen with start value"))
+;;; Vertical_Arrangement2
+
+(add-component Screen1 com.google.appinventor.components.runtime.VerticalArrangement Vertical_Arrangement2 
+(set-and-coerce-property! 'Vertical_Arrangement2 'AlignHorizontal 3 'number)
+
+(set-and-coerce-property! 'Vertical_Arrangement2 'AlignVertical 2 'number)
+
+(set-and-coerce-property! 'Vertical_Arrangement2 'BackgroundColor #xFEF4FB92 'number)
+
+(set-and-coerce-property! 'Vertical_Arrangement2 'Width -2 'number)
+
+)
+
+;;; Card_View3
+
+(add-component Vertical_Arrangement2 com.google.appinventor.components.runtime.MakeroidCardView Card_View3 
+(set-and-coerce-property! 'Card_View3 'AlignHorizontal 3 'number)
+
+(set-and-coerce-property! 'Card_View3 'BackgroundColor #x00FFFFFF 'number)
+
+(set-and-coerce-property! 'Card_View3 'CornerRadius 20 'number)
+
+(set-and-coerce-property! 'Card_View3 'Elevation 0 'number)
+
+(set-and-coerce-property! 'Card_View3 'Height -2 'number)
+
+(set-and-coerce-property! 'Card_View3 'Width -2 'number)
+
+)
+
+;;; List_View2
+
+(add-component Card_View3 com.google.appinventor.components.runtime.ListView List_View2 
+(set-and-coerce-property! 'List_View2 'BackgroundColor #x00FFFFFF 'number)
+
+)
+
+(define-event List_View2 AfterPicking()(set-this-form)
+    (call-yail-primitive open-another-screen-with-start-value (*list-for-runtime* "DATA" (call-yail-primitive yail-list-get-item (*list-for-runtime* (get-var g$HARDWIRE_DATA) (call-yail-primitive yail-list-index (*list-for-runtime* (get-property 'List_View2 'Selection) (get-var g$HARDWIRE)) '(any list) "index in list")) '(list number) "select list item")) '(text any) "open another screen with start value"))
+;;; Web1
+
+(add-component Screen1 com.google.appinventor.components.runtime.Web Web1 
+(set-and-coerce-property! 'Web1 'Url "https://docs.google.com/spreadsheets/d/1LpDYQ-h6lxX0HXLXXXLuHi2EeSEz4iM-m329Izz31DI/export?format=csv" 'text)
+
+)
+
+;;; Tiny_DB1
+
+(add-component Screen1 com.google.appinventor.components.runtime.TinyDB Tiny_DB1 
+)
+
+;;; Spreadsheet_Extension1
+
+(add-component Screen1 com.apphelper.googlespreadsheet.Spreadsheet_Extension Spreadsheet_Extension1 
+(set-and-coerce-property! 'Spreadsheet_Extension1 'ScriptURL "https://script.google.com/macros/s/AKfycbz_QJbtg9ZvrBh_7UwpzFJl1Opt0dsAgLE51ToxN6GSp8A7-7T98MRnzSsWI7QuG1AwCQ/exec" 'text)
+
+(set-and-coerce-property! 'Spreadsheet_Extension1 'SheetName "Sheet1" 'text)
+
+(set-and-coerce-property! 'Spreadsheet_Extension1 'SheetNumber "1" 'text)
+
+(set-and-coerce-property! 'Spreadsheet_Extension1 'SpreadsheetID "1LpDYQ-h6lxX0HXLXXXLuHi2EeSEz4iM-m329Izz31DI" 'text)
+
+)
+
+(define-event Spreadsheet_Extension1 GotColumn($columns)(set-this-form)
+    (if (call-yail-primitive yail-list-member? (*list-for-runtime* (call-yail-primitive make-yail-list (*list-for-runtime* "PLC" "PLCDATA" ) '(any any ) "make a list") (call-yail-primitive yail-list-from-csv-table (*list-for-runtime* (lexical-value $columns) ) '(text) "list from csv table")) '(any list) "is in list?") (begin   (set-var! g$PLC_LIST (call-yail-primitive yail-list-from-csv-table (*list-for-runtime* (lexical-value $columns) ) '(text) "list from csv table"))(call-yail-primitive yail-list-remove-item! (*list-for-runtime* (get-var g$PLC_LIST) 1) '(list number) "remove list item")(foreach $item (begin   (call-yail-primitive yail-list-add-to-list! (*list-for-runtime* (get-var g$PLC) (call-yail-primitive yail-list-get-item (*list-for-runtime* (lexical-value $item) 1) '(list number) "select list item") ) '(list any ) "add items to list")(call-yail-primitive yail-list-add-to-list! (*list-for-runtime* (get-var g$PLC_DATA) (call-yail-primitive yail-list-get-item (*list-for-runtime* (lexical-value $item) 2) '(list number) "select list item") ) '(list any ) "add items to list")) (get-var g$PLC_LIST))(set-and-coerce-property! 'List_View1 'Elements (get-var g$PLC) 'list)(call-component-method 'Spreadsheet_Extension1 'GetColumn (*list-for-runtime* "C,D") '(text))) (begin (if (call-yail-primitive yail-list-member? (*list-for-runtime* (call-yail-primitive make-yail-list (*list-for-runtime* "HARDWIRE" "HARDWIREDATA" ) '(any any ) "make a list") (call-yail-primitive yail-list-from-csv-table (*list-for-runtime* (lexical-value $columns) ) '(text) "list from csv table")) '(any list) "is in list?") (begin   (set-var! g$HARDWIRE_LIST (call-yail-primitive yail-list-from-csv-table (*list-for-runtime* (lexical-value $columns) ) '(text) "list from csv table"))(call-yail-primitive yail-list-remove-item! (*list-for-runtime* (get-var g$HARDWIRE_LIST) 1) '(list number) "remove list item")(foreach $item (begin   (call-yail-primitive yail-list-add-to-list! (*list-for-runtime* (get-var g$HARDWIRE) (call-yail-primitive yail-list-get-item (*list-for-runtime* (lexical-value $item) 1) '(list number) "select list item") ) '(list any ) "add items to list")(call-yail-primitive yail-list-add-to-list! (*list-for-runtime* (get-var g$HARDWIRE_DATA) (call-yail-primitive yail-list-get-item (*list-for-runtime* (lexical-value $item) 2) '(list number) "select list item") ) '(list any ) "add items to list")) (get-var g$HARDWIRE_LIST))(set-and-coerce-property! 'List_View2 'Elements (get-var g$HARDWIRE) 'list))))))
+(init-runtime)

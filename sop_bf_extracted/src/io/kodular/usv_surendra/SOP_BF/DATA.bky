@@ -1,0 +1,61 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="component_event" id="T]QqVu@ox|Q:6$^7AQK=" x="-550" y="-550">
+    <mutation component_type="Form" is_generic="false" instance_name="DATA" event_name="Initialize"></mutation>
+    <field name="COMPONENT_SELECTOR">DATA</field>
+    <statement name="DO">
+      <block type="component_method" id="_VfOxx:2rb%6=L;TXTl0">
+        <mutation component_type="MakeroidDynamicLabel" method_name="CreateLabel" is_generic="false" instance_name="Dynamic_Label1"></mutation>
+        <field name="COMPONENT_SELECTOR">Dynamic_Label1</field>
+        <value name="ARG0">
+          <block type="math_number" id="80MWLRg0iR0(]1j-@H;U">
+            <field name="NUM">1</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="component_component_block" id="wDci53qo5t,-@d!E.lps">
+            <mutation component_type="VerticalScrollArrangement" instance_name="Vertical_Scroll_Arrangement1"></mutation>
+            <field name="COMPONENT_SELECTOR">Vertical_Scroll_Arrangement1</field>
+          </block>
+        </value>
+        <next>
+          <block type="component_method" id="O3Cp:NmT{FfV;5;[mN{D">
+            <mutation component_type="MakeroidDynamicLabel" method_name="SetText" is_generic="false" instance_name="Dynamic_Label1"></mutation>
+            <field name="COMPONENT_SELECTOR">Dynamic_Label1</field>
+            <value name="ARG0">
+              <block type="math_number" id="?O1H]jNz*14I^D4styx.">
+                <field name="NUM">1</field>
+              </block>
+            </value>
+            <value name="ARG1">
+              <block type="controls_getStartValue" id="cKC(*lVI,;x/W=y-iyFj"></block>
+            </value>
+            <value name="ARG2">
+              <block type="logic_boolean" id="Z~i`CQ1)^QS!KUR|Xth^">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+            <next>
+              <block type="component_method" id="UQ##y~h7yYFb:x3@Wk5A">
+                <mutation component_type="MakeroidDynamicLabel" method_name="SetAlignment" is_generic="false" instance_name="Dynamic_Label1"></mutation>
+                <field name="COMPONENT_SELECTOR">Dynamic_Label1</field>
+                <value name="ARG0">
+                  <block type="math_number" id="5iLlidj}2FfmfW9J~PNv">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+                <value name="ARG1">
+                  <block type="component_set_get" id="/^U+gJH:~V_}Bd,ifK8i">
+                    <mutation component_type="MakeroidDynamicLabel" set_or_get="get" property_name="AlignmentLeft" is_generic="false" instance_name="Dynamic_Label1"></mutation>
+                    <field name="COMPONENT_SELECTOR">Dynamic_Label1</field>
+                    <field name="PROP">AlignmentLeft</field>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <yacodeblocks ya-version="243" language-version="34"></yacodeblocks>
+</xml>

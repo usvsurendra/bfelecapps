@@ -1,0 +1,460 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="global_declaration" id="HM#:Qk9#;itW9:|Nr=5E" x="10" y="-450">
+    <field name="NAME">HARDWIRE</field>
+    <value name="VALUE">
+      <block type="lists_create_with" id="~uS.wq*ugbVrm:hxLUVz">
+        <mutation items="0"></mutation>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="wr__wx(Yu}t9@t#*TS*m" x="10" y="-390">
+    <field name="NAME">HARDWIRE_DATA</field>
+    <value name="VALUE">
+      <block type="lists_create_with" id=",H;dLoU+iIWGObihnLx^">
+        <mutation items="0"></mutation>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="$j(@1wd1SaR~L2p^-Dyx" x="10" y="-330">
+    <field name="NAME">PLC_LIST</field>
+    <value name="VALUE">
+      <block type="lists_create_with" id="GXmC:*Z7%v;I$Xp=a|Ew">
+        <mutation items="0"></mutation>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="4M}OT6vRfoYp%Ant99-3" x="10" y="-270">
+    <field name="NAME">HARDWIRE_LIST</field>
+    <value name="VALUE">
+      <block type="lists_create_with" id="v8PZk2VInYc-MYja=#x1">
+        <mutation items="0"></mutation>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="l_Ay~0..^j7LcZPM/IU/" x="10" y="-210">
+    <field name="NAME">PLC</field>
+    <value name="VALUE">
+      <block type="lists_create_with" id="Ewxs-9bP/YhO~Stnk{z}">
+        <mutation items="0"></mutation>
+      </block>
+    </value>
+  </block>
+  <block type="global_declaration" id="M.JatN69XCaVZ9*cN_6i" x="10" y="-150">
+    <field name="NAME">PLC_DATA</field>
+    <value name="VALUE">
+      <block type="lists_create_with" id="bgp3#rCZ`8s$6B?YDPp)">
+        <mutation items="0"></mutation>
+      </block>
+    </value>
+  </block>
+  <block type="component_event" id="FIeKOv}XhZ}0.Nr_AEAA" x="10" y="-90">
+    <mutation component_type="Form" is_generic="false" instance_name="Screen1" event_name="Initialize"></mutation>
+    <field name="COMPONENT_SELECTOR">Screen1</field>
+    <statement name="DO">
+      <block type="component_method" id="h(7s`txsLt8@AXCXap6x">
+        <mutation component_type="MakeroidViewPager" method_name="AddComponentToView" is_generic="false" instance_name="View_Pager1"></mutation>
+        <field name="COMPONENT_SELECTOR">View_Pager1</field>
+        <value name="ARG0">
+          <block type="component_component_block" id="#8j0Lc`!xX@k[n.jE|(7">
+            <mutation component_type="VerticalArrangement" instance_name="Vertical_Arrangement1"></mutation>
+            <field name="COMPONENT_SELECTOR">Vertical_Arrangement1</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="text" id=",l4,-|_Q?|KZikaMmK*7">
+            <field name="TEXT">PLC</field>
+          </block>
+        </value>
+        <next>
+          <block type="component_method" id=",e30nyLXlS=kxTyN8INb">
+            <mutation component_type="MakeroidViewPager" method_name="AddComponentToView" is_generic="false" instance_name="View_Pager1"></mutation>
+            <field name="COMPONENT_SELECTOR">View_Pager1</field>
+            <value name="ARG0">
+              <block type="component_component_block" id="W32)m$0fD3-^UN_U}#|v">
+                <mutation component_type="VerticalArrangement" instance_name="Vertical_Arrangement2"></mutation>
+                <field name="COMPONENT_SELECTOR">Vertical_Arrangement2</field>
+              </block>
+            </value>
+            <value name="ARG1">
+              <block type="text" id="cqTy4{5_;?IPH/c^rG2D">
+                <field name="TEXT">HARDWIRE</field>
+              </block>
+            </value>
+            <next>
+              <block type="component_method" id=".l*+|G$nY=VY%(qqPQVH">
+                <mutation component_type="Spreadsheet_Extension" method_name="GetColumn" is_generic="false" instance_name="Spreadsheet_Extension1"></mutation>
+                <field name="COMPONENT_SELECTOR">Spreadsheet_Extension1</field>
+                <value name="ARG0">
+                  <block type="text" id="$(Ypm^v[s.IzF[4nPf.T">
+                    <field name="TEXT">A,B</field>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="VqOh+i)qb~rA8y:B-!f3" x="10" y="190">
+    <mutation component_type="ListView" is_generic="false" instance_name="List_View1" event_name="AfterPicking"></mutation>
+    <field name="COMPONENT_SELECTOR">List_View1</field>
+    <statement name="DO">
+      <block type="controls_openAnotherScreenWithStartValue" id="vqllusR(CLAp7*15MNQ1">
+        <value name="SCREENNAME">
+          <block type="helpers_screen_names" id="ok_DK%O[eouM$J+/2$.w">
+            <field name="SCREEN">DATA</field>
+          </block>
+        </value>
+        <value name="STARTVALUE">
+          <block type="lists_select_item" id="XeC@Hg-JZ#k]h8iVP_r{">
+            <value name="LIST">
+              <block type="lexical_variable_get" id="wg^M3c!S_U1]}A512y$;">
+                <field name="VAR">global PLC_DATA</field>
+              </block>
+            </value>
+            <value name="NUM">
+              <block type="lists_position_in" id="Fxg_.j1uX,V:ek~JJc9N">
+                <value name="ITEM">
+                  <block type="component_set_get" id="F9QXTd,|sO}NO2!ywWvk">
+                    <mutation component_type="ListView" set_or_get="get" property_name="Selection" is_generic="false" instance_name="List_View1"></mutation>
+                    <field name="COMPONENT_SELECTOR">List_View1</field>
+                    <field name="PROP">Selection</field>
+                  </block>
+                </value>
+                <value name="LIST">
+                  <block type="lexical_variable_get" id="u;xIz2.oMix+9Cz8e,sd">
+                    <field name="VAR">global PLC</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="-l|q]KQg{^A3Dd@49lz{" x="10" y="350">
+    <mutation component_type="ListView" is_generic="false" instance_name="List_View2" event_name="AfterPicking"></mutation>
+    <field name="COMPONENT_SELECTOR">List_View2</field>
+    <statement name="DO">
+      <block type="controls_openAnotherScreenWithStartValue" id="=eF[*K3#k}D!mVfcJd0E">
+        <value name="SCREENNAME">
+          <block type="helpers_screen_names" id="rppWV$nLrSp+cqYg*%w{">
+            <field name="SCREEN">DATA</field>
+          </block>
+        </value>
+        <value name="STARTVALUE">
+          <block type="lists_select_item" id="a{fv|m~^Yl#;(DQs4uKC">
+            <value name="LIST">
+              <block type="lexical_variable_get" id="TMdwu;v/9]|jKY7j08~g">
+                <field name="VAR">global HARDWIRE_DATA</field>
+              </block>
+            </value>
+            <value name="NUM">
+              <block type="lists_position_in" id="Qz#^X%U+tOf]V`zgNju$">
+                <value name="ITEM">
+                  <block type="component_set_get" id="jcv;2T*Vu%~7Yv-X7i+)">
+                    <mutation component_type="ListView" set_or_get="get" property_name="Selection" is_generic="false" instance_name="List_View2"></mutation>
+                    <field name="COMPONENT_SELECTOR">List_View2</field>
+                    <field name="PROP">Selection</field>
+                  </block>
+                </value>
+                <value name="LIST">
+                  <block type="lexical_variable_get" id="5,e]x}2Ab9uxm2;[Dc$b">
+                    <field name="VAR">global HARDWIRE</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="|8GNkdX9GU3T_iZeWx@j" x="10" y="510">
+    <mutation component_type="Spreadsheet_Extension" is_generic="false" instance_name="Spreadsheet_Extension1" event_name="GotColumn"></mutation>
+    <field name="COMPONENT_SELECTOR">Spreadsheet_Extension1</field>
+    <statement name="DO">
+      <block type="controls_if" id="H)V2ImHsSLo594W3ZevQ">
+        <mutation elseif="1"></mutation>
+        <value name="IF0">
+          <block type="lists_is_in" id=",3[Xm.t)dWa0?c^Z-C~`">
+            <value name="ITEM">
+              <block type="lists_create_with" id="@b;-{=u=Aa.0;{p-)(F]">
+                <mutation items="2"></mutation>
+                <value name="ADD0">
+                  <block type="text" id="tGk0@p]=JKiA[]C|e._C">
+                    <field name="TEXT">PLC</field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="text" id="WG_RZrjM/I=89QXgE@YJ">
+                    <field name="TEXT">PLCDATA</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="LIST">
+              <block type="lists_from_csv_table" id="`A@Xk8-BD-;RP#DHN7hM">
+                <value name="TEXT">
+                  <block type="lexical_variable_get" id="ryc0miOfCewby#N}C.,d">
+                    <mutation>
+                      <eventparam name="columns"></eventparam>
+                    </mutation>
+                    <field name="VAR">columns</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lexical_variable_set" id="SrUemrI{|GI.6TceF.T6">
+            <field name="VAR">global PLC_LIST</field>
+            <value name="VALUE">
+              <block type="lists_from_csv_table" id="o@qrRbvz3EjC;k]5v)$(">
+                <value name="TEXT">
+                  <block type="lexical_variable_get" id="aMqr:=Ek3,K|}.xL|=^[">
+                    <mutation>
+                      <eventparam name="columns"></eventparam>
+                    </mutation>
+                    <field name="VAR">columns</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="lists_remove_item" id="BWfFLs~$GiN;rT*ZGI1n">
+                <value name="LIST">
+                  <block type="lexical_variable_get" id="rFYfhf8FQ_mPJP5iv=xG">
+                    <field name="VAR">global PLC_LIST</field>
+                  </block>
+                </value>
+                <value name="INDEX">
+                  <block type="math_number" id="QwGhjECPp!-/yK0]2YiF">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="controls_forEach" id="!r8+iU^bvsu}V=x[`kMB" collapsed="true">
+                    <field name="VAR">item</field>
+                    <value name="LIST">
+                      <block type="lexical_variable_get" id="~HUJV4e+L7.7(3f)Ienf">
+                        <field name="VAR">global PLC_LIST</field>
+                      </block>
+                    </value>
+                    <statement name="DO">
+                      <block type="lists_add_items" id="!Ox_q}d7MgXG$#1%h=b4">
+                        <mutation items="1"></mutation>
+                        <value name="LIST">
+                          <block type="lexical_variable_get" id="N9J%]95aC4rIJotnth.f">
+                            <field name="VAR">global PLC</field>
+                          </block>
+                        </value>
+                        <value name="ITEM0">
+                          <block type="lists_select_item" id="W,*h/v=@/OdQA*XU;)@Y">
+                            <value name="LIST">
+                              <block type="lexical_variable_get" id="]+-S79v@j/Y$G{Zm,gO-">
+                                <field name="VAR">item</field>
+                              </block>
+                            </value>
+                            <value name="NUM">
+                              <block type="math_number" id="F~)zch2Cw_?2Go4Hf4R!">
+                                <field name="NUM">1</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="lists_add_items" id="Uzbtx?r,g11%-]!Dhi4{">
+                            <mutation items="1"></mutation>
+                            <value name="LIST">
+                              <block type="lexical_variable_get" id="qc1]TfXYwNv;@_aX9wdt">
+                                <field name="VAR">global PLC_DATA</field>
+                              </block>
+                            </value>
+                            <value name="ITEM0">
+                              <block type="lists_select_item" id="%;0p!.h$RAm~(BuyViE|">
+                                <value name="LIST">
+                                  <block type="lexical_variable_get" id="2sB^upZk#y|}6ZHYU6]Y">
+                                    <field name="VAR">item</field>
+                                  </block>
+                                </value>
+                                <value name="NUM">
+                                  <block type="math_number" id="-2w!iO23Jzo5khV:r*qC">
+                                    <field name="NUM">2</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </next>
+                      </block>
+                    </statement>
+                    <next>
+                      <block type="component_set_get" id="0(MD]5t#$jq]L.Y(*;w=">
+                        <mutation component_type="ListView" set_or_get="set" property_name="Elements" is_generic="false" instance_name="List_View1"></mutation>
+                        <field name="COMPONENT_SELECTOR">List_View1</field>
+                        <field name="PROP">Elements</field>
+                        <value name="VALUE">
+                          <block type="lexical_variable_get" id="Hz[v5S2xg9J))4qYKvrJ">
+                            <field name="VAR">global PLC</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="component_method" id="2[~^QCnc7J]QCYa7T]C;">
+                            <mutation component_type="Spreadsheet_Extension" method_name="GetColumn" is_generic="false" instance_name="Spreadsheet_Extension1"></mutation>
+                            <field name="COMPONENT_SELECTOR">Spreadsheet_Extension1</field>
+                            <value name="ARG0">
+                              <block type="text" id="bS+~)Lp8h!SPhP3I+@un">
+                                <field name="TEXT">C,D</field>
+                              </block>
+                            </value>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="IF1">
+          <block type="lists_is_in" id="TcQr?)M[fUOHjM{~mVdH">
+            <value name="ITEM">
+              <block type="lists_create_with" id="eJP?6E0pU1;qi$4#77eP">
+                <mutation items="2"></mutation>
+                <value name="ADD0">
+                  <block type="text" id="z62`^GR7oJ2;U=`oQr{Z">
+                    <field name="TEXT">HARDWIRE</field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="text" id=")T$r!2+l]8|lX_kHVbyp">
+                    <field name="TEXT">HARDWIREDATA</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="LIST">
+              <block type="lists_from_csv_table" id="v/+]uy9a+o)L41f4%0ky">
+                <value name="TEXT">
+                  <block type="lexical_variable_get" id="{Z*ZiB!4v3$NlvdC!lM?">
+                    <mutation>
+                      <eventparam name="columns"></eventparam>
+                    </mutation>
+                    <field name="VAR">columns</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO1">
+          <block type="lexical_variable_set" id="*z/Qi+(vVO~?HtY;2dD;">
+            <field name="VAR">global HARDWIRE_LIST</field>
+            <value name="VALUE">
+              <block type="lists_from_csv_table" id="5iD}!3AU[a#(@7rW1yFU">
+                <value name="TEXT">
+                  <block type="lexical_variable_get" id="%cM6~QdA`{fE[K@U`[@R">
+                    <mutation>
+                      <eventparam name="columns"></eventparam>
+                    </mutation>
+                    <field name="VAR">columns</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="lists_remove_item" id="PW~rlFh!eSMC6w6=A3u2">
+                <value name="LIST">
+                  <block type="lexical_variable_get" id="KQ+Yg3-/`Vi5Vrs}]]#/">
+                    <field name="VAR">global HARDWIRE_LIST</field>
+                  </block>
+                </value>
+                <value name="INDEX">
+                  <block type="math_number" id="=A5Zf_`LY)`Qjh^sl?z*">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="controls_forEach" id="lkedk}L#DOfzt%W73,N*" collapsed="true">
+                    <field name="VAR">item</field>
+                    <value name="LIST">
+                      <block type="lexical_variable_get" id="I.FQBv*]qcv;(1QpBm|=">
+                        <field name="VAR">global HARDWIRE_LIST</field>
+                      </block>
+                    </value>
+                    <statement name="DO">
+                      <block type="lists_add_items" id="Z/IRr.CDi0;/gspN:k{g">
+                        <mutation items="1"></mutation>
+                        <value name="LIST">
+                          <block type="lexical_variable_get" id="h!]4i5/ZPx%zegd%JZ3b">
+                            <field name="VAR">global HARDWIRE</field>
+                          </block>
+                        </value>
+                        <value name="ITEM0">
+                          <block type="lists_select_item" id="7brnS_rheoN=1DuQ,aXD">
+                            <value name="LIST">
+                              <block type="lexical_variable_get" id="oIprxX-hU4wy:1;MgUm4">
+                                <field name="VAR">item</field>
+                              </block>
+                            </value>
+                            <value name="NUM">
+                              <block type="math_number" id="V1l[eOccu,3Y}%/)69;L">
+                                <field name="NUM">1</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="lists_add_items" id="0!aaV{oJGLjdZ^*C@ky+">
+                            <mutation items="1"></mutation>
+                            <value name="LIST">
+                              <block type="lexical_variable_get" id="9(`U.WF].9elo{Y83=*j">
+                                <field name="VAR">global HARDWIRE_DATA</field>
+                              </block>
+                            </value>
+                            <value name="ITEM0">
+                              <block type="lists_select_item" id="oi@=uq_]lE;ER]{?.#Q4">
+                                <value name="LIST">
+                                  <block type="lexical_variable_get" id="s0U2]~}E$fm+i:RF@^=7">
+                                    <field name="VAR">item</field>
+                                  </block>
+                                </value>
+                                <value name="NUM">
+                                  <block type="math_number" id="y2`w!w7UWa4@o/a;bH$i">
+                                    <field name="NUM">2</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </next>
+                      </block>
+                    </statement>
+                    <next>
+                      <block type="component_set_get" id="^F)PBnqyZ:pz04T#4`}c">
+                        <mutation component_type="ListView" set_or_get="set" property_name="Elements" is_generic="false" instance_name="List_View2"></mutation>
+                        <field name="COMPONENT_SELECTOR">List_View2</field>
+                        <field name="PROP">Elements</field>
+                        <value name="VALUE">
+                          <block type="lexical_variable_get" id="=SyXCV;gz]dBgGB3qldt">
+                            <field name="VAR">global HARDWIRE</field>
+                          </block>
+                        </value>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <yacodeblocks ya-version="243" language-version="34"></yacodeblocks>
+</xml>

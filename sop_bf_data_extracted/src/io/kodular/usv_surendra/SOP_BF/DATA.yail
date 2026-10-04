@@ -1,0 +1,68 @@
+#|
+$Source $Yail
+|#
+
+(define-form io.kodular.usv_surendra.SOP_BF.DATA DATA)
+(require <com.google.youngandroid.runtime>)
+
+;;; DATA
+
+(do-after-form-creation (set-and-coerce-property! 'DATA 'AlignHorizontal 3 'number)
+ (set-and-coerce-property! 'DATA 'AppId "452786292247830587" 'text)
+ (set-and-coerce-property! 'DATA 'AppName "SOP_BF" 'text)
+ (set-and-coerce-property! 'DATA 'BackgroundColor #xFFEEEEEE 'number)
+ (set-and-coerce-property! 'DATA 'MinSdk 31 'number)
+ (set-and-coerce-property! 'DATA 'ReceiveSharedText "none" 'text)
+ (set-and-coerce-property! 'DATA 'ShowOptionsMenu #f 'boolean)
+ (set-and-coerce-property! 'DATA 'Title " " 'text)
+)
+
+(define-event DATA Initialize()(set-this-form)
+    (call-component-method 'Dynamic_Label1 'CreateLabel (*list-for-runtime* 1  (get-component Vertical_Scroll_Arrangement1)) '(number component))(call-component-method 'Dynamic_Label1 'SetText (*list-for-runtime* 1  (call-yail-primitive get-start-value (*list-for-runtime* ) '() "get start value")  #t) '(number text boolean))(call-component-method 'Dynamic_Label1 'SetAlignment (*list-for-runtime* 1  (get-property 'Dynamic_Label1 'AlignmentLeft)) '(number number)))
+;;; Space1_copy1
+
+(add-component DATA com.google.appinventor.components.runtime.SpaceView Space1_copy1 
+(set-and-coerce-property! 'Space1_copy1 'Height -1003 'number)
+
+)
+
+;;; Horizontal_Scroll_Arrangement1
+
+(add-component DATA com.google.appinventor.components.runtime.HorizontalScrollArrangement Horizontal_Scroll_Arrangement1 
+(set-and-coerce-property! 'Horizontal_Scroll_Arrangement1 'Height -2 'number)
+
+)
+
+;;; Space1
+
+(add-component Horizontal_Scroll_Arrangement1 com.google.appinventor.components.runtime.SpaceView Space1 
+(set-and-coerce-property! 'Space1 'Width -1005 'number)
+
+)
+
+;;; Vertical_Scroll_Arrangement1
+
+(add-component Horizontal_Scroll_Arrangement1 com.google.appinventor.components.runtime.VerticalScrollArrangement Vertical_Scroll_Arrangement1 
+(set-and-coerce-property! 'Vertical_Scroll_Arrangement1 'AlignHorizontal 3 'number)
+
+(set-and-coerce-property! 'Vertical_Scroll_Arrangement1 'BackgroundColor #x00FFFFFF 'number)
+
+(set-and-coerce-property! 'Vertical_Scroll_Arrangement1 'Height -2 'number)
+
+(set-and-coerce-property! 'Vertical_Scroll_Arrangement1 'Width -2 'number)
+
+)
+
+;;; Space1_copy
+
+(add-component Horizontal_Scroll_Arrangement1 com.google.appinventor.components.runtime.SpaceView Space1_copy 
+(set-and-coerce-property! 'Space1_copy 'Width -1005 'number)
+
+)
+
+;;; Dynamic_Label1
+
+(add-component DATA com.google.appinventor.components.runtime.MakeroidDynamicLabel Dynamic_Label1 
+)
+
+(init-runtime)

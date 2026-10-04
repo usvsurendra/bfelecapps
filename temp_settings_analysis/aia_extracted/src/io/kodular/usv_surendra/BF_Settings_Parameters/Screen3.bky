@@ -1,0 +1,82 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="component_event" id="bH*~XSA*wKAZ$kM~(PXE" x="-350" y="-430">
+    <mutation component_type="Form" is_generic="false" instance_name="Screen3" event_name="Initialize"></mutation>
+    <field name="COMPONENT_SELECTOR">Screen3</field>
+    <statement name="DO">
+      <block type="component_set_get" id="+5^;K/jcnU;ecj{PFNoC">
+        <mutation component_type="Form" set_or_get="set" property_name="StatusBarColor" is_generic="false" instance_name="Screen3"></mutation>
+        <field name="COMPONENT_SELECTOR">Screen3</field>
+        <field name="PROP">StatusBarColor</field>
+        <value name="VALUE">
+          <block type="color_make_color" id="@LOPc*?+NQHXgm)=l)yK">
+            <value name="COLORLIST">
+              <block type="lists_create_with" id=".batF?G#}qhpI[;4}k^:" inline="false">
+                <mutation items="3"></mutation>
+                <value name="ADD0">
+                  <block type="math_number" id="9}B6M?$fsjVOZNPJw!t%">
+                    <field name="NUM">76</field>
+                  </block>
+                </value>
+                <value name="ADD1">
+                  <block type="math_number" id=")6P?F8LrUwl!bT8wR1w0">
+                    <field name="NUM">175</field>
+                  </block>
+                </value>
+                <value name="ADD2">
+                  <block type="math_number" id="!eao0i5yofYa[fBo;fDx">
+                    <field name="NUM">80</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+        <next>
+          <block type="component_set_get" id="Kl9;el/lf+I2^bot}*eX">
+            <mutation component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="Label2"></mutation>
+            <field name="COMPONENT_SELECTOR">Label2</field>
+            <field name="PROP">Text</field>
+            <value name="VALUE">
+              <block type="lists_select_item" id="3N^UT0uV9y.5QJ-uie,u">
+                <value name="LIST">
+                  <block type="controls_getStartValue" id="KqzAL(FFxYP~={q;hfdz"></block>
+                </value>
+                <value name="NUM">
+                  <block type="math_number" id="}1@4q;E}mJLDB$+RE:*I">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="component_set_get" id="8.U6`t1`xXR*=7koa$=c">
+                <mutation component_type="WebViewer" set_or_get="set" property_name="HomeUrl" is_generic="false" instance_name="Web_Viewer1"></mutation>
+                <field name="COMPONENT_SELECTOR">Web_Viewer1</field>
+                <field name="PROP">HomeUrl</field>
+                <value name="VALUE">
+                  <block type="lists_select_item" id="ECoI5Zg,CKnsKTLhkHrG">
+                    <value name="LIST">
+                      <block type="controls_getStartValue" id="K|9?oaO[nD^_Ky.jd$B*"></block>
+                    </value>
+                    <value name="NUM">
+                      <block type="math_number" id="z[qS_zY@yI}v!,b%@VPi">
+                        <field name="NUM">2</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <next>
+                  <block type="component_method" id="=OA9unuQ.0$2+5YBS;OM">
+                    <mutation component_type="WebViewer" method_name="GoHome" is_generic="false" instance_name="Web_Viewer1"></mutation>
+                    <field name="COMPONENT_SELECTOR">Web_Viewer1</field>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <yacodeblocks ya-version="247" language-version="34"></yacodeblocks>
+</xml>

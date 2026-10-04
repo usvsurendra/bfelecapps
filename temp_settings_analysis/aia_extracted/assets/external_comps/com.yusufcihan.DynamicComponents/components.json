@@ -1,0 +1,375 @@
+[{
+ "categoryString": "EXTENSION",
+ "dateBuilt": "2021-02-15T18:47:13+0300",
+ "nonVisible": "true",
+ "iconName": "aiwebres/icon.png",
+ "methods": [
+  {
+   "deprecated": "false",
+   "name": "ChangeId",
+   "description": "Assign a new ID to a previously created dynamic component.",
+   "params": [
+    {
+     "name": "id",
+     "type": "text"
+    },
+    {
+     "name": "newId",
+     "type": "text"
+    }
+   ]
+  },
+  {
+   "deprecated": "false",
+   "name": "Create",
+   "description": "Creates a new dynamic component.",
+   "params": [
+    {
+     "name": "in",
+     "type": "component"
+    },
+    {
+     "name": "componentName",
+     "type": "any"
+    },
+    {
+     "name": "id",
+     "type": "text"
+    }
+   ]
+  },
+  {
+   "deprecated": "false",
+   "name": "GenerateID",
+   "description": "Generates a random ID to create a component with.",
+   "params": [],
+   "returnType": "text"
+  },
+  {
+   "deprecated": "false",
+   "name": "GetComponent",
+   "description": "Returns the component associated with the specified ID.",
+   "params": [{
+    "name": "id",
+    "type": "text"
+   }],
+   "returnType": "any"
+  },
+  {
+   "deprecated": "false",
+   "name": "GetComponentMeta",
+   "description": "Get meta data about the specified component.",
+   "params": [{
+    "name": "component",
+    "type": "component"
+   }],
+   "returnType": "dictionary"
+  },
+  {
+   "deprecated": "false",
+   "name": "GetEventMeta",
+   "description": "Get meta data about events for the specified component.",
+   "params": [{
+    "name": "component",
+    "type": "component"
+   }],
+   "returnType": "dictionary"
+  },
+  {
+   "deprecated": "false",
+   "name": "GetFunctionMeta",
+   "description": "Get meta data about functions for the specified component.",
+   "params": [{
+    "name": "component",
+    "type": "component"
+   }],
+   "returnType": "dictionary"
+  },
+  {
+   "deprecated": "false",
+   "name": "GetId",
+   "description": "Returns the ID of the specified component.",
+   "params": [{
+    "name": "component",
+    "type": "component"
+   }],
+   "returnType": "text"
+  },
+  {
+   "deprecated": "true",
+   "name": "GetName",
+   "description": "Do NOT use this function. Use 'GetComponentMeta' as a replacement.",
+   "params": [{
+    "name": "component",
+    "type": "component"
+   }],
+   "returnType": "text"
+  },
+  {
+   "deprecated": "false",
+   "name": "GetOrder",
+   "description": "Returns the position of the specified component according to its parent view. Index begins at one.",
+   "params": [{
+    "name": "component",
+    "type": "component"
+   }],
+   "returnType": "number"
+  },
+  {
+   "deprecated": "false",
+   "name": "GetProperty",
+   "description": "Get a properties value.",
+   "params": [
+    {
+     "name": "component",
+     "type": "component"
+    },
+    {
+     "name": "name",
+     "type": "text"
+    }
+   ],
+   "returnType": "any"
+  },
+  {
+   "deprecated": "false",
+   "name": "GetPropertyMeta",
+   "description": "Get meta data about properties for the specified component, including their values.",
+   "params": [{
+    "name": "component",
+    "type": "component"
+   }],
+   "returnType": "dictionary"
+  },
+  {
+   "deprecated": "false",
+   "name": "Invoke",
+   "description": "Invokes a method with parameters.",
+   "params": [
+    {
+     "name": "component",
+     "type": "component"
+    },
+    {
+     "name": "name",
+     "type": "text"
+    },
+    {
+     "name": "parameters",
+     "type": "list"
+    }
+   ],
+   "returnType": "any"
+  },
+  {
+   "deprecated": "false",
+   "name": "IsDynamic",
+   "description": "Returns if the specified component was created by the Dynamic Components extension.",
+   "params": [{
+    "name": "component",
+    "type": "component"
+   }],
+   "returnType": "boolean"
+  },
+  {
+   "deprecated": "false",
+   "name": "LastUsedID",
+   "description": "Returns the last used ID.",
+   "params": [],
+   "returnType": "any"
+  },
+  {
+   "deprecated": "true",
+   "name": "ListDetails",
+   "description": "Do NOT use this function. Use 'GetComponentMeta', 'GetEventMeta', 'GetFunctionMeta', and 'GetPropertyMeta' as replacements.",
+   "params": [{
+    "name": "component",
+    "type": "component"
+   }],
+   "returnType": "text"
+  },
+  {
+   "deprecated": "false",
+   "name": "Move",
+   "description": "Moves the specified component to the specified view.",
+   "params": [
+    {
+     "name": "arrangement",
+     "type": "component"
+    },
+    {
+     "name": "component",
+     "type": "component"
+    }
+   ]
+  },
+  {
+   "deprecated": "true",
+   "name": "RandomUUID",
+   "description": "Do NOT use this function. Use 'GenerateID' as a replacement.",
+   "params": [],
+   "returnType": "text"
+  },
+  {
+   "deprecated": "false",
+   "name": "Remove",
+   "description": "Removes the component with the specified ID from the layout/screen so the ID can be reused.",
+   "params": [{
+    "name": "id",
+    "type": "text"
+   }]
+  },
+  {
+   "deprecated": "false",
+   "name": "Schema",
+   "description": "Uses a JSON Object to create dynamic components. Templates can also contain parameters that will be replaced with the values which are defined from the parameters list.",
+   "params": [
+    {
+     "name": "in",
+     "type": "component"
+    },
+    {
+     "name": "template",
+     "type": "text"
+    },
+    {
+     "name": "parameters",
+     "type": "list"
+    }
+   ]
+  },
+  {
+   "deprecated": "false",
+   "name": "SetOrder",
+   "description": "Sets the order of the specified component according to its parent view. Typing zero will move the component to the end, index begins at one.",
+   "params": [
+    {
+     "name": "component",
+     "type": "component"
+    },
+    {
+     "name": "index",
+     "type": "number"
+    }
+   ]
+  },
+  {
+   "deprecated": "false",
+   "name": "SetProperties",
+   "description": "Set multiple properties of the specified component using a dictionary, including those only available from the Designer.",
+   "params": [
+    {
+     "name": "component",
+     "type": "component"
+    },
+    {
+     "name": "properties",
+     "type": "dictionary"
+    }
+   ]
+  },
+  {
+   "deprecated": "false",
+   "name": "SetProperty",
+   "description": "Set a property of the specified component, including those only available from the Designer.",
+   "params": [
+    {
+     "name": "component",
+     "type": "component"
+    },
+    {
+     "name": "name",
+     "type": "text"
+    },
+    {
+     "name": "value",
+     "type": "any"
+    }
+   ]
+  },
+  {
+   "deprecated": "false",
+   "name": "UsedIDs",
+   "description": "Returns all IDs of components created with the Dynamic Components extension.",
+   "params": [],
+   "returnType": "list"
+  }
+ ],
+ "blockProperties": [
+  {
+   "rw": "invisible",
+   "deprecated": "false",
+   "name": "Thread",
+   "description": "Property for Thread",
+   "type": "text"
+  },
+  {
+   "rw": "read-only",
+   "deprecated": "false",
+   "name": "Version",
+   "description": "Returns the version of the Dynamic Components extension.",
+   "type": "number"
+  },
+  {
+   "rw": "read-only",
+   "deprecated": "false",
+   "name": "VersionName",
+   "description": "Returns the version name of the Dynamic Components extension.",
+   "type": "text"
+  }
+ ],
+ "helpUrl": "https://github.com/ysfchn/DynamicComponents-AI2/blob/main/README.md",
+ "type": "com.yusufcihan.DynamicComponents.DynamicComponents",
+ "versionName": "2.2.2",
+ "androidMinSdk": 7,
+ "version": "9",
+ "external": "true",
+ "showOnPalette": "true",
+ "name": "DynamicComponents",
+ "helpString": "Dynamic Components is an extension that creates any component in your App Inventor distribution programmatically, instead of having pre-defined components. Made with &#x2764;&#xfe0f; by Yusuf Cihan.",
+ "properties": [{
+  "defaultValue": "UI",
+  "name": "Thread",
+  "editorArgs": [
+   "Main",
+   "UI"
+  ],
+  "editorType": "choices"
+ }],
+ "events": [
+  {
+   "deprecated": "false",
+   "name": "ComponentBuilt",
+   "description": "Is called after a component has been created.",
+   "params": [
+    {
+     "name": "component",
+     "type": "component"
+    },
+    {
+     "name": "id",
+     "type": "text"
+    },
+    {
+     "name": "type",
+     "type": "text"
+    }
+   ]
+  },
+  {
+   "deprecated": "false",
+   "name": "SchemaCreated",
+   "description": "Is called after a schema has/mostly finished component creation.",
+   "params": [
+    {
+     "name": "name",
+     "type": "text"
+    },
+    {
+     "name": "parameters",
+     "type": "list"
+    }
+   ]
+  }
+ ]
+}]
