@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:bf_elec_apps/firebase_options.dart';
 
 bool _firebaseReady = false;
 
@@ -9,7 +10,9 @@ bool get firebaseReady => _firebaseReady;
 
 Future<void> initFirebase() async {
   try {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     _firebaseReady = true;
   } catch (error) {
     _firebaseReady = false;
